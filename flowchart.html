@@ -21,7 +21,55 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 </script>
 
-<script src="https://viewer.diagrams.net/js/viewer-static.min.js"></script>
+
+<script>
+/**
+ * draw.io / diagrams.net viewer loader with fallbacks.
+ * Some networks block viewer.diagrams.net, so we try multiple sources.
+ */
+(function() {
+  var sources = [
+    "https://viewer.diagrams.net/js/viewer-static.min.js",
+    "https://app.diagrams.net/js/viewer-static.min.js",
+    "https://jgraph.github.io/drawio/src/main/webapp/js/viewer-static.min.js"
+    // If all above are blocked, download viewer-static.min.js and place it next to this HTML, then uncomment:
+    // , "./viewer-static.min.js"
+  ];
+
+  function inject(src, onOk, onFail) {
+    var s = document.createElement("script");
+    s.src = src;
+    s.async = true;
+    s.onload = onOk;
+    s.onerror = onFail;
+    document.head.appendChild(s);
+  }
+
+  function poke() {
+    // Trigger common init hooks (some builds listen on load / DOMContentLoaded).
+    try { document.dispatchEvent(new Event("DOMContentLoaded")); } catch (e) {}
+    try { window.dispatchEvent(new Event("load")); } catch (e) {}
+    try { window.dispatchEvent(new Event("resize")); } catch (e) {}
+  }
+
+  function loadAt(i) {
+    if (i >= sources.length) {
+      var warn = document.getElementById("drawio-warn");
+      if (warn) warn.classList.remove("hidden");
+      return;
+    }
+    inject(sources[i], function() {
+      // give the viewer a tick to register listeners then poke
+      setTimeout(poke, 0);
+      setTimeout(poke, 300);
+    }, function() { loadAt(i + 1); });
+  }
+
+  // Start immediately (before DOMContentLoaded when possible)
+  loadAt(0);
+})();
+</script>
+
 <style>
 
         body {
@@ -195,6 +243,18 @@ a.flex > span:first-child { min-width:0; flex:1 1 auto; overflow-wrap:anywhere; 
 </header>
 
 <div class="page-wrap">
+<div id="drawio-warn" class="hidden mx-auto max-w-5xl px-4 pt-4">
+  <div class="rounded-2xl border border-amber-200 bg-amber-50 p-4 text-amber-900">
+    <div class="font-semibold">流程圖未顯示？</div>
+    <div class="text-sm mt-1 leading-relaxed">
+      這一頁的流程圖使用 draw.io / diagrams.net 的 <span class="font-mono">viewer-static</span> 腳本渲染。
+      若你所在的網路環境封鎖 diagrams.net 相關網域，流程圖可能會變成空白。<br>
+      解法：請改用可連外的網路，或將 <span class="font-mono">viewer-static.min.js</span> 下載後放到本專案根目錄（與本頁同層），
+      並在本頁上方 loader 裡把 <span class="font-mono">"./viewer-static.min.js"</span> 那行取消註解。
+    </div>
+  </div>
+</div>
+
 <div class="text-center mb-12">
 <h3 class="text-2xl font-bold text-slate-900">採購流程圖</h3>
 </div>
