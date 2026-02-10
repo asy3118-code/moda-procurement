@@ -1,0 +1,493 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+
+
+        body {
+            font-family: 'Inter', 'Noto Sans TC', sans-serif;
+        }
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Noto+Sans+TC:wght@400;500;700&display=swap');
+        
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease-in-out;
+        }
+        .sub-accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-in-out;
+        }
+        .accordion-header.active .accordion-icon, .sub-accordion-header.active .sub-accordion-icon {
+            transform: rotate(180deg);
+        }
+        .tab-link.active {
+            border-bottom-color: #2563eb;
+            color: #1e40af;
+        }
+    
+        /* === Responsive Fix Pack (for Google Sites / Mobile) === */
+        html, body {
+            width: 100%;
+            max-width: 100%;
+            overflow-x: hidden;
+        }
+        /* Prevent flex children from forcing a wider layout viewport on mobile */
+        #app, main, section, nav, .tab-panel, .accordion-content, .sub-accordion-content {
+            min-width: 0;
+        }
+        .accordion-header, .sub-accordion-header, a.flex {
+            min-width: 0;
+            gap: 0.5rem; /* keeps icon separated when text wraps */
+        }
+        .accordion-header > span:first-child,
+        .sub-accordion-header > span:first-child,
+        a.flex > span:first-child {
+            min-width: 0;
+            flex: 1 1 auto;
+            overflow-wrap: anywhere;
+            word-break: break-word;
+        }
+        .accordion-icon, .sub-accordion-icon, a.flex > span:last-child {
+            flex: 0 0 auto;
+        }
+
+        /* Diagrams.net / mxgraph: keep big diagrams from expanding the page width */
+        .mxgraph {
+            max-width: 100% !important;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+        .mxgraph svg, .mxgraph img, .mxgraph canvas, .mxgraph > div, .mxgraph > svg {
+            max-width: 100% !important;
+            height: auto !important;
+        }
+
+        /* Safety: long strings (URLs / IDs) */
+        a, p, span {
+            overflow-wrap: anywhere;
+        }
+        /* === End Responsive Fix Pack === */
+
+    
+        /* === Tabs Mobile Polish === */
+        /* Turn the top tab bar into a neat grid on phones (no ugly horizontal scrollbar) */
+        @media (max-width: 640px) {
+            nav[aria-label="Tabs"] {
+                display: grid !important;
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: 0.25rem 0.75rem;
+                overflow-x: visible !important;
+                padding-bottom: 0.25rem;
+            }
+            /* Cancel Tailwind space-x-* margins when in grid mode */
+            nav[aria-label="Tabs"] > :not([hidden]) ~ :not([hidden]) {
+                margin-left: 0 !important;
+            }
+            nav[aria-label="Tabs"] .tab-link {
+                white-space: normal !important;
+                text-align: center;
+                line-height: 1.2;
+                padding: 0.65rem 0.25rem;
+                font-size: 0.875rem; /* ~text-sm */
+            }
+        }
+        /* Slightly tighten on very small screens */
+        @media (max-width: 380px) {
+            nav[aria-label="Tabs"] {
+                grid-template-columns: 1fr;
+                gap: 0.25rem;
+            }
+            nav[aria-label="Tabs"] .tab-link {
+                font-size: 0.875rem;
+            }
+        }
+        /* === End Tabs Mobile Polish === */
+
+    
+        /* === Mobile Collapsible Tabs (phones) === */
+        @media (max-width: 640px) {
+            /* Hide the tabs by default; show only when expanded */
+            #tabsNav {
+                display: none !important;
+                flex-direction: column !important;
+                gap: 0 !important;
+                overflow: hidden !important;
+                padding-top: 0.25rem;
+                padding-bottom: 0.25rem;
+            }
+            #tabsBar.tabs-open #tabsNav {
+                display: flex !important;
+            }
+            /* Cancel Tailwind space-x-* margins (because the nav keeps `space-x-8`) */
+            #tabsNav > :not([hidden]) ~ :not([hidden]) {
+                margin-left: 0 !important;
+            }
+            /* Make each tab a full-width row for easier tapping */
+            #tabsNav .tab-link {
+                width: 100%;
+                text-align: left;
+                padding: 0.75rem 0;
+                border-bottom: 1px solid rgba(226, 232, 240, 1);
+                white-space: normal !important;
+                line-height: 1.2;
+            }
+            #tabsNav .tab-link:last-child { border-bottom: none; }
+
+            /* Rotate chevron when open */
+            #tabsBar.tabs-open #mobileTabsChevron {
+                transform: rotate(180deg);
+            }
+        }
+        /* === End Mobile Collapsible Tabs === */
+
+    
+
+/* === Google Sites / Visual Polish Pack === */
+html, body { margin: 0; padding: 0; background: #f8fafc; }
+body { font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", Arial, "Apple Color Emoji", "Segoe UI Emoji"; }
+::selection { background: rgba(37, 99, 235, 0.18); }
+a { text-decoration-thickness: 2px; text-underline-offset: 3px; }
+
+/* Slightly nicer card + hover */
+.bg-white.rounded-xl.shadow-md { 
+  border: 1px solid rgba(226, 232, 240, 0.9);
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
+}
+.bg-white.rounded-xl.shadow-md:hover {
+  box-shadow: 0 12px 32px rgba(15, 23, 42, 0.10);
+}
+
+/* Accordion headers: hover + focus */
+.accordion-header, .sub-accordion-header {
+  transition: background-color .15s ease, transform .15s ease;
+}
+.accordion-header:hover, .sub-accordion-header:hover {
+  background-color: rgba(248, 250, 252, 1);
+}
+.accordion-header:focus-visible, .sub-accordion-header:focus-visible {
+  outline: 3px solid rgba(37, 99, 235, 0.25);
+  outline-offset: 2px;
+  border-radius: 12px;
+}
+
+/* Page wrapper */
+.proc-wrap {
+  min-height: auto;
+  background: linear-gradient(to bottom, rgba(248, 250, 252, 1), rgba(255, 255, 255, 1));
+}
+.proc-container {
+  max-width: 72rem;
+  margin: 0 auto;
+  padding: 1.25rem 1rem 1.5rem;
+}
+@media (min-width: 640px) { .proc-container { padding: 2rem 1.5rem 2.5rem; } }
+@media (min-width: 1024px) { .proc-container { padding: 2.25rem 2rem 3rem; } }
+
+.proc-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: .5rem;
+  padding: .35rem .75rem;
+  border: 1px solid rgba(226, 232, 240, 1);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, .75);
+  backdrop-filter: blur(8px);
+  box-shadow: 0 6px 18px rgba(15, 23, 42, 0.06);
+  color: #475569;
+  font-size: .875rem;
+}
+.proc-title { margin-top: .75rem; font-weight: 800; color: #0f172a; letter-spacing: -0.02em; }
+.proc-subtitle { margin-top: .25rem; color: #64748b; }
+
+/* Back-to-top button */
+#backToTop {
+  position: fixed;
+  right: 14px;
+  bottom: 14px;
+  z-index: 50;
+  padding: .65rem .75rem;
+  border-radius: 999px;
+  border: 1px solid rgba(226, 232, 240, 1);
+  background: rgba(255, 255, 255, .92);
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.12);
+  color: #0f172a;
+  font-weight: 600;
+}
+#backToTop:hover { transform: translateY(-1px); }
+.hidden { display: none !important; }
+
+/* === Embed Height Helper (Google Sites) === */
+@media (max-width: 640px) {
+  .proc-subtitle { margin-bottom: .25rem; }
+  main.mt-6 { margin-top: 1rem !important; }
+}
+/* === End Embed Height Helper === */
+
+/* === End Visual Polish Pack === */
+
+
+
+/* === Top Navigation (GitHub Pages) === */
+.site-header{
+  position: sticky;
+  top: 0;
+  z-index: 60;
+  background: rgba(248,250,252,.85);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(226,232,240,1);
+}
+.site-header-inner{
+  max-width: 72rem;
+  margin: 0 auto;
+  padding: .75rem 1rem;
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+}
+.site-brand{
+  display: inline-flex;
+  align-items: center;
+  gap: .6rem;
+  text-decoration: none;
+  color: #0f172a;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+.brand-dot{
+  width: 10px; height: 10px; border-radius: 999px;
+  background: #2563eb;
+  box-shadow: 0 6px 18px rgba(37, 99, 235, .25);
+}
+.brand-text{ font-size: 1rem; }
+.site-nav{
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: .25rem;
+}
+.nav-link{
+  display: inline-flex;
+  padding: .5rem .75rem;
+  border-radius: 999px;
+  text-decoration: none;
+  color: #334155;
+  font-weight: 700;
+  font-size: .925rem;
+}
+.nav-link:hover{ background: rgba(226,232,240,.7); color:#0f172a; }
+.nav-link.is-active{
+  background: rgba(37,99,235,.10);
+  color: #1d4ed8;
+}
+.nav-toggle{
+  margin-left: auto;
+  display: none;
+  border: 1px solid rgba(226,232,240,1);
+  background: rgba(255,255,255,.85);
+  border-radius: 12px;
+  padding: .5rem .6rem;
+  box-shadow: 0 10px 30px rgba(15,23,42,.10);
+}
+.nav-icon{ width: 20px; height: 20px; color:#0f172a; }
+.sr-only{
+  position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0;
+}
+@media (max-width: 860px){
+  .nav-toggle{ display: inline-flex; }
+  .site-nav{
+    display:none;
+    position: absolute;
+    left: 0; right: 0;
+    top: 100%;
+    background: rgba(248,250,252,.97);
+    border-bottom: 1px solid rgba(226,232,240,1);
+    padding: .5rem .75rem .75rem;
+    flex-direction: column;
+    align-items: stretch;
+    gap: .25rem;
+  }
+  .site-header-inner{ position: relative; }
+  .site-header.nav-open .site-nav{ display:flex; }
+  .nav-link{ border-radius: 14px; }
+}
+/* === End Top Navigation === */
+
+</style>
+<title>工程會解釋函｜數位發展部採購專區</title>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="site-header-inner">
+    <a class="site-brand" href="index.html" aria-label="回到首頁">
+      <span class="brand-dot" aria-hidden="true"></span>
+      <span class="brand-text">數位發展部・採購專區</span>
+    </a>
+
+    <button id="navToggle" class="nav-toggle" type="button" aria-expanded="false" aria-controls="siteNav">
+      <span class="sr-only">開啟選單</span>
+      <svg xmlns="http://www.w3.org/2000/svg" class="nav-icon" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+        <path fill-rule="evenodd" d="M3 5.75A.75.75 0 013.75 5h12.5a.75.75 0 010 1.5H3.75A.75.75 0 013 5.75zm0 4.25c0-.414.336-.75.75-.75h12.5a.75.75 0 010 1.5H3.75A.75.75 0 01 3 10zm0 4.25c0-.414.336-.75.75-.75h12.5a.75.75 0 010 1.5H3.75A.75.75 0 01 3 14.25z" clip-rule="evenodd"/>
+      </svg>
+    </button>
+
+    <nav id="siteNav" class="site-nav" aria-label="主選單">
+      <a class="nav-link" href="docs.html">採購文件</a>
+      <a class="nav-link" href="flowchart.html">採購流程圖</a>
+      <a class="nav-link" href="laws.html">相關法令及解釋函</a>
+      <a class="nav-link" href="qa.html">智慧問答</a>
+      <a class="nav-link" href="pcc.html">工程會解釋函</a>
+    </nav>
+  </div>
+</header>
+
+<div class="proc-wrap">
+  <div class="proc-container">
+    <div class="proc-badge">數位發展部・採購專區</div>
+    <h1 class="proc-title text-2xl sm:text-3xl">工程會解釋函</h1>
+    <p class="proc-subtitle text-sm sm:text-base">使用上方選單切換頁面；本頁內容已針對手機/平板/電腦自適應排版。</p>
+    <main class="mt-6">
+      
+
+    </main>
+  </div>
+
+  <button id="backToTop" class="hidden" type="button" aria-label="回到頁首">↑ 回到頁首</button>
+</div>
+
+<script>
+(function(){
+  const header = document.querySelector('.site-header');
+  const toggle = document.getElementById('navToggle');
+  const nav = document.getElementById('siteNav');
+  if (!header || !toggle || !nav) return;
+
+  const setOpen = (open) => {
+    header.classList.toggle('nav-open', !!open);
+    toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+  };
+
+  toggle.addEventListener('click', () => {
+    const open = header.classList.contains('nav-open');
+    setOpen(!open);
+  });
+
+  // close after clicking a link (mobile)
+  nav.addEventListener('click', (e) => {
+    const a = e.target.closest('a');
+    if (!a) return;
+    setOpen(false);
+  });
+
+  // highlight current page
+  const current = (location.pathname.split('/').pop() || 'index.html').toLowerCase();
+  nav.querySelectorAll('a.nav-link').forEach(a => {
+    const href = (a.getAttribute('href') || '').toLowerCase();
+    if (href === current || (current === 'index.html' && href === 'docs.html')) {
+      a.classList.add('is-active');
+    }
+  });
+})();
+</script>
+
+<script>
+/* ===== Procurement Portal UI (Google Sites friendly) ===== */
+(function () {
+  const patchMxgraphNodes = () => {
+    const nodes = document.querySelectorAll(".mxgraph[data-mxgraph]");
+    nodes.forEach((node) => {
+      const raw = node.getAttribute("data-mxgraph");
+      if (!raw) return;
+      try { JSON.parse(raw); } catch (e) {
+        const fixed = raw
+          .replace(/("#0000ff")("nav")/g, '$1,$2')
+          .replace(/("false")("toolbar")/g, '$1,$2')
+          .replace(/("lightbox")("edit")/g, '$1,$2')
+          .replace(/("_blank")("xml")/g, '$1,$2');
+        node.setAttribute("data-mxgraph", fixed);
+      }
+    });
+  };
+
+  // Robust accordion: avoid "被下面卡片蓋住" by keeping opened containers' max-height large enough.
+  const openContent = (content) => {
+    if (!content) return;
+    // 1) animate to the real height
+    content.style.maxHeight = content.scrollHeight + "px";
+    // 2) after animation, unlock to a very large value so nested items won't clip
+    window.clearTimeout(content.__unlockTimer);
+    content.__unlockTimer = window.setTimeout(() => {
+      if (content.style.maxHeight !== "0px") content.style.maxHeight = "9999px";
+    }, 460);
+  };
+
+  const closeContent = (content) => {
+    if (!content) return;
+    window.clearTimeout(content.__unlockTimer);
+    // If it was "unlocked" (9999px), set back to current height first to animate smoothly
+    content.style.maxHeight = content.scrollHeight + "px";
+    requestAnimationFrame(() => {
+      content.style.maxHeight = "0px";
+    });
+  };
+
+  const collapseAll = () => {
+    document.querySelectorAll(".accordion-content, .sub-accordion-content").forEach((c) => {
+      window.clearTimeout(c.__unlockTimer);
+      c.style.maxHeight = "0px";
+    });
+    document.querySelectorAll(".accordion-header.active, .sub-accordion-header.active").forEach((h) => {
+      h.classList.remove("active");
+    });
+  };
+
+  const initAccordions = () => {
+    document.addEventListener("click", function (event) {
+      const header = event.target.closest(".accordion-header, .sub-accordion-header");
+      if (!header) return;
+
+      const content = header.nextElementSibling;
+      const isOpening = !header.classList.contains("active");
+
+      header.classList.toggle("active");
+
+      if (isOpening) openContent(content);
+      else closeContent(content);
+    });
+
+    // On resize/orientation change, keep opened content visible
+    window.addEventListener("resize", () => {
+      document.querySelectorAll(".accordion-header.active, .sub-accordion-header.active").forEach((h) => {
+        const c = h.nextElementSibling;
+        if (c) c.style.maxHeight = "9999px";
+      });
+    }, { passive: true });
+  };
+
+  const initBackToTop = () => {
+    const btn = document.getElementById("backToTop");
+    if (!btn) return;
+    const onScroll = () => {
+      if (window.scrollY > 600) btn.classList.remove("hidden");
+      else btn.classList.add("hidden");
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    btn.addEventListener("click", () => window.scrollTo({ top: 0, behavior: "smooth" }));
+    onScroll();
+  };
+
+  document.addEventListener("DOMContentLoaded", () => {
+    patchMxgraphNodes();
+    collapseAll();
+    initAccordions();
+    initBackToTop();
+  });
+})();
+</script>
+</body>
+</html>

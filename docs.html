@@ -1,0 +1,938 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+
+
+        body {
+            font-family: 'Inter', 'Noto Sans TC', sans-serif;
+        }
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Noto+Sans+TC:wght@400;500;700&display=swap');
+        
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease-in-out;
+        }
+        .sub-accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-in-out;
+        }
+        .accordion-header.active .accordion-icon, .sub-accordion-header.active .sub-accordion-icon {
+            transform: rotate(180deg);
+        }
+        .tab-link.active {
+            border-bottom-color: #2563eb;
+            color: #1e40af;
+        }
+    
+        /* === Responsive Fix Pack (for Google Sites / Mobile) === */
+        html, body {
+            width: 100%;
+            max-width: 100%;
+            overflow-x: hidden;
+        }
+        /* Prevent flex children from forcing a wider layout viewport on mobile */
+        #app, main, section, nav, .tab-panel, .accordion-content, .sub-accordion-content {
+            min-width: 0;
+        }
+        .accordion-header, .sub-accordion-header, a.flex {
+            min-width: 0;
+            gap: 0.5rem; /* keeps icon separated when text wraps */
+        }
+        .accordion-header > span:first-child,
+        .sub-accordion-header > span:first-child,
+        a.flex > span:first-child {
+            min-width: 0;
+            flex: 1 1 auto;
+            overflow-wrap: anywhere;
+            word-break: break-word;
+        }
+        .accordion-icon, .sub-accordion-icon, a.flex > span:last-child {
+            flex: 0 0 auto;
+        }
+
+        /* Diagrams.net / mxgraph: keep big diagrams from expanding the page width */
+        .mxgraph {
+            max-width: 100% !important;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+        .mxgraph svg, .mxgraph img, .mxgraph canvas, .mxgraph > div, .mxgraph > svg {
+            max-width: 100% !important;
+            height: auto !important;
+        }
+
+        /* Safety: long strings (URLs / IDs) */
+        a, p, span {
+            overflow-wrap: anywhere;
+        }
+        /* === End Responsive Fix Pack === */
+
+    
+        /* === Tabs Mobile Polish === */
+        /* Turn the top tab bar into a neat grid on phones (no ugly horizontal scrollbar) */
+        @media (max-width: 640px) {
+            nav[aria-label="Tabs"] {
+                display: grid !important;
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: 0.25rem 0.75rem;
+                overflow-x: visible !important;
+                padding-bottom: 0.25rem;
+            }
+            /* Cancel Tailwind space-x-* margins when in grid mode */
+            nav[aria-label="Tabs"] > :not([hidden]) ~ :not([hidden]) {
+                margin-left: 0 !important;
+            }
+            nav[aria-label="Tabs"] .tab-link {
+                white-space: normal !important;
+                text-align: center;
+                line-height: 1.2;
+                padding: 0.65rem 0.25rem;
+                font-size: 0.875rem; /* ~text-sm */
+            }
+        }
+        /* Slightly tighten on very small screens */
+        @media (max-width: 380px) {
+            nav[aria-label="Tabs"] {
+                grid-template-columns: 1fr;
+                gap: 0.25rem;
+            }
+            nav[aria-label="Tabs"] .tab-link {
+                font-size: 0.875rem;
+            }
+        }
+        /* === End Tabs Mobile Polish === */
+
+    
+        /* === Mobile Collapsible Tabs (phones) === */
+        @media (max-width: 640px) {
+            /* Hide the tabs by default; show only when expanded */
+            #tabsNav {
+                display: none !important;
+                flex-direction: column !important;
+                gap: 0 !important;
+                overflow: hidden !important;
+                padding-top: 0.25rem;
+                padding-bottom: 0.25rem;
+            }
+            #tabsBar.tabs-open #tabsNav {
+                display: flex !important;
+            }
+            /* Cancel Tailwind space-x-* margins (because the nav keeps `space-x-8`) */
+            #tabsNav > :not([hidden]) ~ :not([hidden]) {
+                margin-left: 0 !important;
+            }
+            /* Make each tab a full-width row for easier tapping */
+            #tabsNav .tab-link {
+                width: 100%;
+                text-align: left;
+                padding: 0.75rem 0;
+                border-bottom: 1px solid rgba(226, 232, 240, 1);
+                white-space: normal !important;
+                line-height: 1.2;
+            }
+            #tabsNav .tab-link:last-child { border-bottom: none; }
+
+            /* Rotate chevron when open */
+            #tabsBar.tabs-open #mobileTabsChevron {
+                transform: rotate(180deg);
+            }
+        }
+        /* === End Mobile Collapsible Tabs === */
+
+    
+
+/* === Google Sites / Visual Polish Pack === */
+html, body { margin: 0; padding: 0; background: #f8fafc; }
+body { font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", Arial, "Apple Color Emoji", "Segoe UI Emoji"; }
+::selection { background: rgba(37, 99, 235, 0.18); }
+a { text-decoration-thickness: 2px; text-underline-offset: 3px; }
+
+/* Slightly nicer card + hover */
+.bg-white.rounded-xl.shadow-md { 
+  border: 1px solid rgba(226, 232, 240, 0.9);
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
+}
+.bg-white.rounded-xl.shadow-md:hover {
+  box-shadow: 0 12px 32px rgba(15, 23, 42, 0.10);
+}
+
+/* Accordion headers: hover + focus */
+.accordion-header, .sub-accordion-header {
+  transition: background-color .15s ease, transform .15s ease;
+}
+.accordion-header:hover, .sub-accordion-header:hover {
+  background-color: rgba(248, 250, 252, 1);
+}
+.accordion-header:focus-visible, .sub-accordion-header:focus-visible {
+  outline: 3px solid rgba(37, 99, 235, 0.25);
+  outline-offset: 2px;
+  border-radius: 12px;
+}
+
+/* Page wrapper */
+.proc-wrap {
+  min-height: auto;
+  background: linear-gradient(to bottom, rgba(248, 250, 252, 1), rgba(255, 255, 255, 1));
+}
+.proc-container {
+  max-width: 72rem;
+  margin: 0 auto;
+  padding: 1.25rem 1rem 1.5rem;
+}
+@media (min-width: 640px) { .proc-container { padding: 2rem 1.5rem 2.5rem; } }
+@media (min-width: 1024px) { .proc-container { padding: 2.25rem 2rem 3rem; } }
+
+.proc-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: .5rem;
+  padding: .35rem .75rem;
+  border: 1px solid rgba(226, 232, 240, 1);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, .75);
+  backdrop-filter: blur(8px);
+  box-shadow: 0 6px 18px rgba(15, 23, 42, 0.06);
+  color: #475569;
+  font-size: .875rem;
+}
+.proc-title { margin-top: .75rem; font-weight: 800; color: #0f172a; letter-spacing: -0.02em; }
+.proc-subtitle { margin-top: .25rem; color: #64748b; }
+
+/* Back-to-top button */
+#backToTop {
+  position: fixed;
+  right: 14px;
+  bottom: 14px;
+  z-index: 50;
+  padding: .65rem .75rem;
+  border-radius: 999px;
+  border: 1px solid rgba(226, 232, 240, 1);
+  background: rgba(255, 255, 255, .92);
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.12);
+  color: #0f172a;
+  font-weight: 600;
+}
+#backToTop:hover { transform: translateY(-1px); }
+.hidden { display: none !important; }
+
+/* === Embed Height Helper (Google Sites) === */
+@media (max-width: 640px) {
+  .proc-subtitle { margin-bottom: .25rem; }
+  main.mt-6 { margin-top: 1rem !important; }
+}
+/* === End Embed Height Helper === */
+
+/* === End Visual Polish Pack === */
+
+
+
+/* === Top Navigation (GitHub Pages) === */
+.site-header{
+  position: sticky;
+  top: 0;
+  z-index: 60;
+  background: rgba(248,250,252,.85);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(226,232,240,1);
+}
+.site-header-inner{
+  max-width: 72rem;
+  margin: 0 auto;
+  padding: .75rem 1rem;
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+}
+.site-brand{
+  display: inline-flex;
+  align-items: center;
+  gap: .6rem;
+  text-decoration: none;
+  color: #0f172a;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+.brand-dot{
+  width: 10px; height: 10px; border-radius: 999px;
+  background: #2563eb;
+  box-shadow: 0 6px 18px rgba(37, 99, 235, .25);
+}
+.brand-text{ font-size: 1rem; }
+.site-nav{
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: .25rem;
+}
+.nav-link{
+  display: inline-flex;
+  padding: .5rem .75rem;
+  border-radius: 999px;
+  text-decoration: none;
+  color: #334155;
+  font-weight: 700;
+  font-size: .925rem;
+}
+.nav-link:hover{ background: rgba(226,232,240,.7); color:#0f172a; }
+.nav-link.is-active{
+  background: rgba(37,99,235,.10);
+  color: #1d4ed8;
+}
+.nav-toggle{
+  margin-left: auto;
+  display: none;
+  border: 1px solid rgba(226,232,240,1);
+  background: rgba(255,255,255,.85);
+  border-radius: 12px;
+  padding: .5rem .6rem;
+  box-shadow: 0 10px 30px rgba(15,23,42,.10);
+}
+.nav-icon{ width: 20px; height: 20px; color:#0f172a; }
+.sr-only{
+  position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0;
+}
+@media (max-width: 860px){
+  .nav-toggle{ display: inline-flex; }
+  .site-nav{
+    display:none;
+    position: absolute;
+    left: 0; right: 0;
+    top: 100%;
+    background: rgba(248,250,252,.97);
+    border-bottom: 1px solid rgba(226,232,240,1);
+    padding: .5rem .75rem .75rem;
+    flex-direction: column;
+    align-items: stretch;
+    gap: .25rem;
+  }
+  .site-header-inner{ position: relative; }
+  .site-header.nav-open .site-nav{ display:flex; }
+  .nav-link{ border-radius: 14px; }
+}
+/* === End Top Navigation === */
+
+</style>
+<title>採購文件｜數位發展部採購專區</title>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="site-header-inner">
+    <a class="site-brand" href="index.html" aria-label="回到首頁">
+      <span class="brand-dot" aria-hidden="true"></span>
+      <span class="brand-text">數位發展部・採購專區</span>
+    </a>
+
+    <button id="navToggle" class="nav-toggle" type="button" aria-expanded="false" aria-controls="siteNav">
+      <span class="sr-only">開啟選單</span>
+      <svg xmlns="http://www.w3.org/2000/svg" class="nav-icon" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+        <path fill-rule="evenodd" d="M3 5.75A.75.75 0 013.75 5h12.5a.75.75 0 010 1.5H3.75A.75.75 0 013 5.75zm0 4.25c0-.414.336-.75.75-.75h12.5a.75.75 0 010 1.5H3.75A.75.75 0 01 3 10zm0 4.25c0-.414.336-.75.75-.75h12.5a.75.75 0 010 1.5H3.75A.75.75 0 01 3 14.25z" clip-rule="evenodd"/>
+      </svg>
+    </button>
+
+    <nav id="siteNav" class="site-nav" aria-label="主選單">
+      <a class="nav-link" href="docs.html">採購文件</a>
+      <a class="nav-link" href="flowchart.html">採購流程圖</a>
+      <a class="nav-link" href="laws.html">相關法令及解釋函</a>
+      <a class="nav-link" href="qa.html">智慧問答</a>
+      <a class="nav-link" href="pcc.html">工程會解釋函</a>
+    </nav>
+  </div>
+</header>
+
+<div class="proc-wrap">
+  <div class="proc-container">
+    <div class="proc-badge">數位發展部・採購專區</div>
+    <h1 class="proc-title text-2xl sm:text-3xl">採購文件</h1>
+    <p class="proc-subtitle text-sm sm:text-base">使用上方選單切換頁面；本頁內容已針對手機/平板/電腦自適應排版。</p>
+    <main class="mt-6">
+      
+<div class="space-y-4">
+<div class="bg-white rounded-xl shadow-md overflow-hidden">
+<button class="accordion-header w-full flex justify-between items-center text-left p-6 focus:outline-none">
+<span class="text-lg font-semibold text-slate-800">1. 請購及準備招標文件</span>
+<span class="accordion-icon text-2xl text-slate-500 transform transition-transform">▼</span>
+</button>
+<div class="accordion-content">
+<div class="px-6 pt-2 pb-6">
+<div class="space-y-4">
+<div class="bg-slate-50 rounded-lg overflow-hidden border border-slate-200">
+<button class="sub-accordion-header w-full flex justify-between items-center text-left p-4 focus:outline-none">
+<span class="font-semibold text-slate-700">未達公告金額，逾公告金額十分之一</span>
+<span class="sub-accordion-icon text-xl text-slate-500 transform transition-transform">▼</span>
+</button>
+<div class="sub-accordion-content">
+<div class="px-4 pt-2 pb-4">
+<div class="border-t border-slate-200">
+<button class="sub-accordion-header w-full flex justify-between items-center text-left py-4 focus:outline-none">
+<span class="font-medium text-slate-700">公開取得企劃書 (取最有利標精神)</span>
+<span class="sub-accordion-icon text-xl text-slate-500 transform transition-transform">▼</span>
+</button>
+<div class="sub-accordion-content">
+<div class="pl-4 pb-4 space-y-2">
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/1VUBlwECuOLr9ggFzWqOO_dofo5fPrmFH/edit?usp=drive_link&amp;ouid=112331576350339106337&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>01_取最有利標精神請購簽(範例)</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/1P47CHpIRpMNsC-wJI3LT_YvVW3yUqyuY/edit?usp=drive_link&amp;ouid=112331576350339106337&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>02_投標須知</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/14N73gzuZUJyQxYMAgkyDmW55D_kqeaRY/edit?usp=drive_link&amp;ouid=112331576350339106337&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>03_委託研究採購契約範本</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/1yIibs5_0K3QlVMh2KtnFldKEfXgZ9lvO/edit?usp=drive_link&amp;ouid=112331576350339106337&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>03_資訊服務採購契約範本</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/1U8VHL8mSBRcS0ew8YKhXwm-FtpB64PPk/edit?usp=drive_link&amp;ouid=112331576350339106337&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>03_財物採購契約範本</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/1jdlq2HrM2OKtPpH9toe854HZTs56htIn/edit?usp=drive_link&amp;ouid=112331576350339106337&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>03_勞務採購契約範本</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/147lMW2BNlfq9hyGrw1wwFw9qBbZQSzEC/edit?usp=drive_link&amp;ouid=112331576350339106337&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>05_委託代理授權書</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/1AUicuEjH68L2QT0tlZqytZuWoyxRZqhB/edit?usp=drive_link&amp;ouid=112331576350339106337&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>06_投標廠商聲明書</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/17A38vmxXM0eJGqW4vo0xPp9w365QxTLI/edit?usp=drive_link&amp;ouid=112331576350339106337&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>07_外標封</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/1NCWQlem2gmZj4Xb4ANL7Y55JFmJ9C5RK/edit?usp=drive_link&amp;ouid=112331576350339106337&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>08_價格標單及其組成說明</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/1Ekn7UbP5IuArU6Q3aibD3kcGTiYUyVBO/edit?usp=drive_link&amp;ouid=112331576350339106337&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>09_評審須知(廠商不簡報-比價-訂定底價非固定費用決標範本)</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/15HMJc9-aa4iM1eUwlqVeAdFqm3z4F9Hp/edit?usp=drive_link&amp;ouid=112331576350339106337&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>09_評審須知(廠商不簡報-訂定底價非固定費用決標範本)</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/1dbFmRRC2XlkO_ghxigsygSylwDYwV0cV/edit?usp=drive_link&amp;ouid=112331576350339106337&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>09_評審須知(廠商簡報-固定費用決標範本)</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/1BWKGKbfJSHRXjPrBp_MthwxuEdWvVc5Y/edit?usp=drive_link&amp;ouid=112331576350339106337&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>09_評審須知(廠商簡報-訂定底價非固定費用決標範本)</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/1cDEa8_88XQHdaWZohHxyTyK2Z6B8XNYg/edit?usp=drive_link&amp;ouid=112331576350339106337&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>10_預算編列分析表</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/1u13G0wZkingZETEdUG-6Ss63VjryPLKJ/edit?usp=drive_link&amp;ouid=112331576350339106337&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>13_公職人員及關係人身分關係揭露表範本(事前揭露)</span><span class="ml-2">🔗</span></a>
+</div>
+</div>
+</div>
+<div class="border-t border-slate-200">
+<button class="sub-accordion-header w-full flex justify-between items-center text-left py-4 focus:outline-none">
+<span class="font-medium text-slate-700">公開取得報價單 (最低標決標)</span>
+<span class="sub-accordion-icon text-xl text-slate-500 transform transition-transform">▼</span>
+</button>
+<div class="sub-accordion-content">
+<div class="pl-4 pb-4 space-y-2">
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/1P47CHpIRpMNsC-wJI3LT_YvVW3yUqyuY/edit?usp=drive_link&amp;ouid=112331576350339106337&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>02_投標須知</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/14N73gzuZUJyQxYMAgkyDmW55D_kqeaRY/edit?usp=drive_link&amp;ouid=112331576350339106337&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>03_委託研究採購契約範本</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/1yIibs5_0K3QlVMh2KtnFldKEfXgZ9lvO/edit?usp=drive_link&amp;ouid=112331576350339106337&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>03_資訊服務採購契約範本</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/1U8VHL8mSBRcS0ew8YKhXwm-FtpB64PPk/edit?usp=drive_link&amp;ouid=112331576350339106337&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>03_財物採購契約範本</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/1jdlq2HrM2OKtPpH9toe854HZTs56htIn/edit?usp=drive_link&amp;ouid=112331576350339106337&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>03_勞務採購契約範本</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/147lMW2BNlfq9hyGrw1wwFw9qBbZQSzEC/edit?usp=drive_link&amp;ouid=112331576350339106337&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>05_委託代理授權書</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/1AUicuEjH68L2QT0tlZqytZuWoyxRZqhB/edit?usp=drive_link&amp;ouid=112331576350339106337&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>06_投標廠商聲明書</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/17A38vmxXM0eJGqW4vo0xPp9w365QxTLI/edit?usp=drive_link&amp;ouid=112331576350339106337&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>07_外標封</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/1Xe5SnR6jCbh3Nt95oCzbnHUljGQW1yG-/edit?usp=drive_link&amp;ouid=112331576350339106337&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>08_價格標單(最低標適用)</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/1cDEa8_88XQHdaWZohHxyTyK2Z6B8XNYg/edit?usp=drive_link&amp;ouid=112331576350339106337&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>10_預算編列分析表</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/1HadXCuMK4HHt2EthaxiyCXx5pEGiHvNb/edit?usp=drive_link&amp;ouid=112331576350339106337&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>12_廠商投標標的規格審查表</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/1u13G0wZkingZETEdUG-6Ss63VjryPLKJ/edit?usp=drive_link&amp;ouid=112331576350339106337&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>13_公職人員及關係人身分關係揭露表範本(事前揭露)</span><span class="ml-2">🔗</span></a>
+</div>
+</div>
+</div>
+<div class="border-t border-slate-200">
+<button class="sub-accordion-header w-full flex justify-between items-center text-left py-4 focus:outline-none">
+<span class="font-medium text-slate-700">限制性招標 (比價)</span>
+<span class="sub-accordion-icon text-xl text-slate-500 transform transition-transform">▼</span>
+</button>
+<div class="sub-accordion-content">
+<div class="pl-4 pb-4 space-y-2">
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/10vdDamZy1wuP9nN8CR3thQxDcVR2LiDD/edit" rel="noopener noreferrer" target="_blank"><span>02_比價須知</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/14N73gzuZUJyQxYMAgkyDmW55D_kqeaRY/edit?usp=drive_link&amp;ouid=112331576350339106337&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>03_委託研究採購契約範本</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/1yIibs5_0K3QlVMh2KtnFldKEfXgZ9lvO/edit?usp=drive_link&amp;ouid=112331576350339106337&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>03_資訊服務採購契約範本</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/1U8VHL8mSBRcS0ew8YKhXwm-FtpB64PPk/edit?usp=drive_link&amp;ouid=112331576350339106337&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>03_財物採購契約範本</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/1jdlq2HrM2OKtPpH9toe854HZTs56htIn/edit?usp=drive_link&amp;ouid=112331576350339106337&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>03_勞務採購契約範本</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/147lMW2BNlfq9hyGrw1wwFw9qBbZQSzEC/edit?usp=drive_link&amp;ouid=112331576350339106337&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>05_委託代理授權書</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/1AUicuEjH68L2QT0tlZqytZuWoyxRZqhB/edit?usp=drive_link&amp;ouid=112331576350339106337&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>06_投標廠商聲明書</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/17A38vmxXM0eJGqW4vo0xPp9w365QxTLI/edit?usp=drive_link&amp;ouid=112331576350339106337&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>07_外標封</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/1Xe5SnR6jCbh3Nt95oCzbnHUljGQW1yG-/edit?usp=drive_link&amp;ouid=112331576350339106337&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>08_價格標單(最低標適用)</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/1cDEa8_88XQHdaWZohHxyTyK2Z6B8XNYg/edit?usp=drive_link&amp;ouid=112331576350339106337&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>10_預算編列分析表</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/1HadXCuMK4HHt2EthaxiyCXx5pEGiHvNb/edit?usp=drive_link&amp;ouid=112331576350339106337&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>12_廠商投標標的規格審查表</span><span class="ml-2">🔗</span></a>
+</div>
+</div>
+</div>
+<div class="border-t border-slate-200">
+<button class="sub-accordion-header w-full flex justify-between items-center text-left py-4 focus:outline-none">
+<span class="font-medium text-slate-700">限制性招標 (議價)</span>
+<span class="sub-accordion-icon text-xl text-slate-500 transform transition-transform">▼</span>
+</button>
+<div class="sub-accordion-content">
+<div class="pl-4 pb-4 space-y-2">
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/1S2geP-jfML0zvbYxXtBAFudYZ_8xoKyJ/edit?usp=drive_link&amp;ouid=112331576350339106337&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>01_（22條1項4款）[簽文範例I-原有採購已完成履約]</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/1p_PhTNr6p5e11XOIuk_tNDxRfa0Y1Tgp/edit?usp=drive_link&amp;ouid=112331576350339106337&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>01_（22條1項4款）[簽文範例II-原有採購尚在履約中]</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/1Fa_yVcP7-bHvLeHZzEtCzWjQuPAzPEOi/edit?usp=drive_link&amp;ouid=112331576350339106337&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>01_（22條1項7款）後續擴充簽(範例)</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/1rog5VzDluihpRkjmu8McD9l3-yUhvbm4/edit?usp=drive_link&amp;ouid=112331576350339106337&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>02_議價須知</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/14N73gzuZUJyQxYMAgkyDmW55D_kqeaRY/edit?usp=drive_link&amp;ouid=112331576350339106337&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>03_委託研究採購契約範本</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/1yIibs5_0K3QlVMh2KtnFldKEfXgZ9lvO/edit?usp=drive_link&amp;ouid=112331576350339106337&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>03_資訊服務採購契約範本</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/1U8VHL8mSBRcS0ew8YKhXwm-FtpB64PPk/edit?usp=drive_link&amp;ouid=112331576350339106337&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>03_財物採購契約範本</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/1jdlq2HrM2OKtPpH9toe854HZTs56htIn/edit?usp=drive_link&amp;ouid=112331576350339106337&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>03_勞務採購契約範本</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/147lMW2BNlfq9hyGrw1wwFw9qBbZQSzEC/edit?usp=drive_link&amp;ouid=112331576350339106337&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>05_委託代理授權書</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/1AUicuEjH68L2QT0tlZqytZuWoyxRZqhB/edit?usp=drive_link&amp;ouid=112331576350339106337&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>06_投標廠商聲明書</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/17A38vmxXM0eJGqW4vo0xPp9w365QxTLI/edit?usp=drive_link&amp;ouid=112331576350339106337&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>07_外標封</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/1NCWQlem2gmZj4Xb4ANL7Y55JFmJ9C5RK/edit?usp=drive_link&amp;ouid=112331576350339106337&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>08_價格標單及其組成說明</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/1Xe5SnR6jCbh3Nt95oCzbnHUljGQW1yG-/edit?usp=drive_link&amp;ouid=112331576350339106337&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>08_價格標單(最低標適用)</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/1cDEa8_88XQHdaWZohHxyTyK2Z6B8XNYg/edit?usp=drive_link&amp;ouid=112331576350339106337&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>10_預算編列分析表</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/1HadXCuMK4HHt2EthaxiyCXx5pEGiHvNb/edit?usp=drive_link&amp;ouid=112331576350339106337&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>12_廠商投標標的規格審查表</span><span class="ml-2">🔗</span></a>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="bg-slate-50 rounded-lg overflow-hidden border border-slate-200">
+<button class="sub-accordion-header w-full flex justify-between items-center text-left p-4 focus:outline-none">
+<span class="font-semibold text-slate-700">公告金額以上之採購</span>
+<span class="sub-accordion-icon text-xl text-slate-500 transform transition-transform">▼</span>
+</button>
+<div class="sub-accordion-content">
+<div class="px-4 pt-2 pb-4">
+<div class="border-t border-slate-200">
+<button class="sub-accordion-header w-full flex justify-between items-center text-left py-4 focus:outline-none">
+<span class="font-medium text-slate-700">公開招標 (最低標)</span>
+<span class="sub-accordion-icon text-xl text-slate-500 transform transition-transform">▼</span>
+</button>
+<div class="sub-accordion-content">
+<div class="pl-4 pb-4 space-y-2">
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/1P47CHpIRpMNsC-wJI3LT_YvVW3yUqyuY/edit?usp=drive_link&amp;ouid=112331576350339106337&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>02_投標須知</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/14N73gzuZUJyQxYMAgkyDmW55D_kqeaRY/edit?usp=drive_link&amp;ouid=112331576350339106337&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>03_委託研究採購契約範本</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/1yIibs5_0K3QlVMh2KtnFldKEfXgZ9lvO/edit?usp=drive_link&amp;ouid=112331576350339106337&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>03_資訊服務採購契約範本</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/1U8VHL8mSBRcS0ew8YKhXwm-FtpB64PPk/edit?usp=drive_link&amp;ouid=112331576350339106337&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>03_財物採購契約範本</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/1jdlq2HrM2OKtPpH9toe854HZTs56htIn/edit?usp=drive_link&amp;ouid=112331576350339106337&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>03_勞務採購契約範本</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/147lMW2BNlfq9hyGrw1wwFw9qBbZQSzEC/edit?usp=drive_link&amp;ouid=112331576350339106337&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>05_委託代理授權書</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/1AUicuEjH68L2QT0tlZqytZuWoyxRZqhB/edit?usp=drive_link&amp;ouid=112331576350339106337&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>06_投標廠商聲明書</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/17A38vmxXM0eJGqW4vo0xPp9w365QxTLI/edit?usp=drive_link&amp;ouid=112331576350339106337&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>07_外標封</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/1Xe5SnR6jCbh3Nt95oCzbnHUljGQW1yG-/edit?usp=drive_link&amp;ouid=112331576350339106337&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>08_價格標單(最低標適用)</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/1cDEa8_88XQHdaWZohHxyTyK2Z6B8XNYg/edit?usp=drive_link&amp;ouid=112331576350339106337&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>10_預算編列分析表</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/1HadXCuMK4HHt2EthaxiyCXx5pEGiHvNb/edit?usp=drive_link&amp;ouid=112331576350339106337&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>12_廠商投標標的規格審查表</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/1u13G0wZkingZETEdUG-6Ss63VjryPLKJ/edit?usp=drive_link&amp;ouid=112331576350339106337&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>13_公職人員及關係人身分關係揭露表範本(事前揭露)</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/1cMBF9c53U63EJ_XeByjcD-mHdS1NFzxt/edit?usp=drive_link&amp;ouid=112331576350339106337&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>14_機關辦理財物採購前自我檢核表(查核金額以上)</span><span class="ml-2">🔗</span></a>
+</div>
+</div>
+</div>
+<div class="border-t border-slate-200">
+<button class="sub-accordion-header w-full flex justify-between items-center text-left py-4 focus:outline-none">
+<span class="font-medium text-slate-700">公開招標 (評分及格最低標)</span>
+<span class="sub-accordion-icon text-xl text-slate-500 transform transition-transform">▼</span>
+</button>
+<div class="sub-accordion-content">
+<div class="pl-4 pb-4 space-y-2">
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/1P47CHpIRpMNsC-wJI3LT_YvVW3yUqyuY/edit?usp=drive_link&amp;ouid=112331576350339106337&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>02_投標須知</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/14N73gzuZUJyQxYMAgkyDmW55D_kqeaRY/edit?usp=drive_link&amp;ouid=112331576350339106337&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>03_委託研究採購契約範本</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/1yIibs5_0K3QlVMh2KtnFldKEfXgZ9lvO/edit?usp=drive_link&amp;ouid=112331576350339106337&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>03_資訊服務採購契約範本</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/1U8VHL8mSBRcS0ew8YKhXwm-FtpB64PPk/edit?usp=drive_link&amp;ouid=112331576350339106337&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>03_財物採購契約範本</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/1jdlq2HrM2OKtPpH9toe854HZTs56htIn/edit?usp=drive_link&amp;ouid=112331576350339106337&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>03_勞務採購契約範本</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/147lMW2BNlfq9hyGrw1wwFw9qBbZQSzEC/edit?usp=drive_link&amp;ouid=112331576350339106337&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>05_委託代理授權書</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/1AUicuEjH68L2QT0tlZqytZuWoyxRZqhB/edit?usp=drive_link&amp;ouid=112331576350339106337&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>06_投標廠商聲明書</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/17A38vmxXM0eJGqW4vo0xPp9w365QxTLI/edit?usp=drive_link&amp;ouid=112331576350339106337&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>07_外標封</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/1Xe5SnR6jCbh3Nt95oCzbnHUljGQW1yG-/edit?usp=drive_link&amp;ouid=112331576350339106337&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>08_價格標單(最低標適用)</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/1cDEa8_88XQHdaWZohHxyTyK2Z6B8XNYg/edit?usp=drive_link&amp;ouid=112331576350339106337&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>10_預算編列分析表</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/1HadXCuMK4HHt2EthaxiyCXx5pEGiHvNb/edit?usp=drive_link&amp;ouid=112331576350339106337&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>12_廠商投標標的規格審查表</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/1u13G0wZkingZETEdUG-6Ss63VjryPLKJ/edit?usp=drive_link&amp;ouid=112331576350339106337&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>13_公職人員及關係人身分關係揭露表範本(事前揭露)</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/1cMBF9c53U63EJ_XeByjcD-mHdS1NFzxt/edit?usp=drive_link&amp;ouid=112331576350339106337&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>14_機關辦理財物採購前自我檢核表(查核金額以上)</span><span class="ml-2">🔗</span></a>
+</div>
+</div>
+</div>
+<div class="border-t border-slate-200">
+<button class="sub-accordion-header w-full flex justify-between items-center text-left py-4 focus:outline-none">
+<span class="font-medium text-slate-700">公開招標 (最有利標)</span>
+<span class="sub-accordion-icon text-xl text-slate-500 transform transition-transform">▼</span>
+</button>
+<div class="sub-accordion-content">
+<div class="pl-4 pb-4 space-y-2">
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/1l7oB0K_W6nohnigRYcVUwWKgoK7M3lrt/edit" rel="noopener noreferrer" target="_blank"><span>01_最有利標請購簽(範例)</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/1P47CHpIRpMNsC-wJI3LT_YvVW3yUqyuY/edit?usp=drive_link&amp;ouid=112331576350339106337&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>02_投標須知</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/14N73gzuZUJyQxYMAgkyDmW55D_kqeaRY/edit?usp=drive_link&amp;ouid=112331576350339106337&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>03_委託研究採購契約範本</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/1yIibs5_0K3QlVMh2KtnFldKEfXgZ9lvO/edit?usp=drive_link&amp;ouid=112331576350339106337&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>03_資訊服務採購契約範本</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/1U8VHL8mSBRcS0ew8YKhXwm-FtpB64PPk/edit?usp=drive_link&amp;ouid=112331576350339106337&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>03_財物採購契約範本</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/1jdlq2HrM2OKtPpH9toe854HZTs56htIn/edit?usp=drive_link&amp;ouid=112331576350339106337&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>03_勞務採購契約範本</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/147lMW2BNlfq9hyGrw1wwFw9qBbZQSzEC/edit?usp=drive_link&amp;ouid=112331576350339106337&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>05_委託代理授權書</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/1AUicuEjH68L2QT0tlZqytZuWoyxRZqhB/edit?usp=drive_link&amp;ouid=112331576350339106337&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>06_投標廠商聲明書</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/17A38vmxXM0eJGqW4vo0xPp9w365QxTLI/edit?usp=drive_link&amp;ouid=112331576350339106337&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>07_外標封</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/1NCWQlem2gmZj4Xb4ANL7Y55JFmJ9C5RK/edit?usp=drive_link&amp;ouid=112331576350339106337&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>08_價格標單及其組成說明</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/1bxUgBgZqOjFjXKcfjcin5vRc9no4sfJB/edit?usp=drive_link&amp;ouid=112331576350339106337&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>09_評選須知(最有利標範本)</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/1cDEa8_88XQHdaWZohHxyTyK2Z6B8XNYg/edit?usp=drive_link&amp;ouid=112331576350339106337&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>10_預算編列分析表</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/1HadXCuMK4HHt2EthaxiyCXx5pEGiHvNb/edit?usp=drive_link&amp;ouid=112331576350339106337&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>12_廠商投標標的規格審查表</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/1u13G0wZkingZETEdUG-6Ss63VjryPLKJ/edit?usp=drive_link&amp;ouid=112331576350339106337&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>13_公職人員及關係人身分關係揭露表範本(事前揭露)</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/1cMBF9c53U63EJ_XeByjcD-mHdS1NFzxt/edit?usp=drive_link&amp;ouid=112331576350339106337&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>14_機關辦理財物採購前自我檢核表(查核金額以上)</span><span class="ml-2">🔗</span></a>
+</div>
+</div>
+</div>
+<div class="border-t border-slate-200">
+<button class="sub-accordion-header w-full flex justify-between items-center text-left py-4 focus:outline-none">
+<span class="font-medium text-slate-700">限制性招標 (準用最有利標)</span>
+<span class="sub-accordion-icon text-xl text-slate-500 transform transition-transform">▼</span>
+</button>
+<div class="sub-accordion-content">
+<div class="pl-4 pb-4 space-y-2">
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/1uHzGER5IdKajYHzHNJVfLoBe3VsQzGvD/edit?usp=drive_link&amp;ouid=112331576350339106337&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>01_準用最有利標請購簽(範例)</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/1P47CHpIRpMNsC-wJI3LT_YvVW3yUqyuY/edit?usp=drive_link&amp;ouid=112331576350339106337&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>02_投標須知</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/14N73gzuZUJyQxYMAgkyDmW55D_kqeaRY/edit?usp=drive_link&amp;ouid=112331576350339106337&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>03_委託研究採購契約範本</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/1yIibs5_0K3QlVMh2KtnFldKEfXgZ9lvO/edit?usp=drive_link&amp;ouid=112331576350339106337&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>03_資訊服務採購契約範本</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/1U8VHL8mSBRcS0ew8YKhXwm-FtpB64PPk/edit?usp=drive_link&amp;ouid=112331576350339106337&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>03_財物採購契約範本</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/1jdlq2HrM2OKtPpH9toe854HZTs56htIn/edit?usp=drive_link&amp;ouid=112331576350339106337&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>03_勞務採購契約範本</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/147lMW2BNlfq9hyGrw1wwFw9qBbZQSzEC/edit?usp=drive_link&amp;ouid=112331576350339106337&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>05_委託代理授權書</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/1AUicuEjH68L2QT0tlZqytZuWoyxRZqhB/edit?usp=drive_link&amp;ouid=112331576350339106337&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>06_投標廠商聲明書</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/17A38vmxXM0eJGqW4vo0xPp9w365QxTLI/edit?usp=drive_link&amp;ouid=112331576350339106337&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>07_外標封</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/1NCWQlem2gmZj4Xb4ANL7Y55JFmJ9C5RK/edit?usp=drive_link&amp;ouid=112331576350339106337&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>08_價格標單及其組成說明</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/1cAnPgDil3SmjupXZ5rSKNXltK1ve2hUf/edit?usp=drive_link&amp;ouid=112331576350339106337&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>09_評選須知(固定費用決標範本)</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/1Z0BjlVxWhLVzII8fgKHFbw9_f9eCeEAb/edit?usp=drive_link&amp;ouid=112331576350339106337&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>09_評選須知(訂定底價非固定費用決標範本)</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/1cDEa8_88XQHdaWZohHxyTyK2Z6B8XNYg/edit?usp=drive_link&amp;ouid=112331576350339106337&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>10_預算編列分析表</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/1u13G0wZkingZETEdUG-6Ss63VjryPLKJ/edit?usp=drive_link&amp;ouid=112331576350339106337&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>13_公職人員及關係人身分關係揭露表範本(事前揭露)</span><span class="ml-2">🔗</span></a>
+</div>
+</div>
+</div>
+<div class="border-t border-slate-200">
+<button class="sub-accordion-header w-full flex justify-between items-center text-left py-4 focus:outline-none">
+<span class="font-medium text-slate-700">限制性招標 (比價)</span>
+<span class="sub-accordion-icon text-xl text-slate-500 transform transition-transform">▼</span>
+</button>
+<div class="sub-accordion-content">
+<div class="pl-4 pb-4 space-y-2">
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/10vdDamZy1wuP9nN8CR3thQxDcVR2LiDD/edit" rel="noopener noreferrer" target="_blank"><span>02_比價須知</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/14N73gzuZUJyQxYMAgkyDmW55D_kqeaRY/edit?usp=drive_link&amp;ouid=112331576350339106337&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>03_委託研究採購契約範本</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/1yIibs5_0K3QlVMh2KtnFldKEfXgZ9lvO/edit?usp=drive_link&amp;ouid=112331576350339106337&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>03_資訊服務採購契約範本</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/1U8VHL8mSBRcS0ew8YKhXwm-FtpB64PPk/edit?usp=drive_link&amp;ouid=112331576350339106337&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>03_財物採購契約範本</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/1jdlq2HrM2OKtPpH9toe854HZTs56htIn/edit?usp=drive_link&amp;ouid=112331576350339106337&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>03_勞務採購契約範本</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/147lMW2BNlfq9hyGrw1wwFw9qBbZQSzEC/edit?usp=drive_link&amp;ouid=112331576350339106337&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>05_委託代理授權書</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/1AUicuEjH68L2QT0tlZqytZuWoyxRZqhB/edit?usp=drive_link&amp;ouid=112331576350339106337&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>06_投標廠商聲明書</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/17A38vmxXM0eJGqW4vo0xPp9w365QxTLI/edit?usp=drive_link&amp;ouid=112331576350339106337&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>07_外標封</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/1Xe5SnR6jCbh3Nt95oCzbnHUljGQW1yG-/edit?usp=drive_link&amp;ouid=112331576350339106337&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>08_價格標單(最低標適用)</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/1cDEa8_88XQHdaWZohHxyTyK2Z6B8XNYg/edit?usp=drive_link&amp;ouid=112331576350339106337&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>10_預算編列分析表</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/1HadXCuMK4HHt2EthaxiyCXx5pEGiHvNb/edit?usp=drive_link&amp;ouid=112331576350339106337&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>12_廠商投標標的規格審查表</span><span class="ml-2">🔗</span></a>
+</div>
+</div>
+</div>
+<div class="border-t border-slate-200">
+<button class="sub-accordion-header w-full flex justify-between items-center text-left py-4 focus:outline-none">
+<span class="font-medium text-slate-700">限制性招標 (議價)</span>
+<span class="sub-accordion-icon text-xl text-slate-500 transform transition-transform">▼</span>
+</button>
+<div class="sub-accordion-content">
+<div class="pl-4 pb-4 space-y-2">
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/1S2geP-jfML0zvbYxXtBAFudYZ_8xoKyJ/edit?usp=drive_link&amp;ouid=112331576350339106337&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>01_（22條1項4款）[簽文範例I-原有採購已完成履約]</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/1p_PhTNr6p5e11XOIuk_tNDxRfa0Y1Tgp/edit?usp=drive_link&amp;ouid=112331576350339106337&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>01_（22條1項4款）[簽文範例II-原有採購尚在履約中]</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/1Fa_yVcP7-bHvLeHZzEtCzWjQuPAzPEOi/edit?usp=drive_link&amp;ouid=112331576350339106337&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>01_（22條1項7款）後續擴充簽(範例)</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/1rog5VzDluihpRkjmu8McD9l3-yUhvbm4/edit?usp=drive_link&amp;ouid=112331576350339106337&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>02_議價須知</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/14N73gzuZUJyQxYMAgkyDmW55D_kqeaRY/edit?usp=drive_link&amp;ouid=112331576350339106337&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>03_委託研究採購契約範本</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/1yIibs5_0K3QlVMh2KtnFldKEfXgZ9lvO/edit?usp=drive_link&amp;ouid=112331576350339106337&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>03_資訊服務採購契約範本</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/1U8VHL8mSBRcS0ew8YKhXwm-FtpB64PPk/edit?usp=drive_link&amp;ouid=112331576350339106337&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>03_財物採購契約範本</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/1jdlq2HrM2OKtPpH9toe854HZTs56htIn/edit?usp=drive_link&amp;ouid=112331576350339106337&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>03_勞務採購契約範本</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/147lMW2BNlfq9hyGrw1wwFw9qBbZQSzEC/edit?usp=drive_link&amp;ouid=112331576350339106337&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>05_委託代理授權書</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/1AUicuEjH68L2QT0tlZqytZuWoyxRZqhB/edit?usp=drive_link&amp;ouid=112331576350339106337&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>06_投標廠商聲明書</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/17A38vmxXM0eJGqW4vo0xPp9w365QxTLI/edit?usp=drive_link&amp;ouid=112331576350339106337&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>07_外標封</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/1NCWQlem2gmZj4Xb4ANL7Y55JFmJ9C5RK/edit?usp=drive_link&amp;ouid=112331576350339106337&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>08_價格標單及其組成說明</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/1Xe5SnR6jCbh3Nt95oCzbnHUljGQW1yG-/edit?usp=drive_link&amp;ouid=112331576350339106337&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>08_價格標單(最低標適用)</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/1cDEa8_88XQHdaWZohHxyTyK2Z6B8XNYg/edit?usp=drive_link&amp;ouid=112331576350339106337&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>10_預算編列分析表</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/1HadXCuMK4HHt2EthaxiyCXx5pEGiHvNb/edit?usp=drive_link&amp;ouid=112331576350339106337&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>12_廠商投標標的規格審查表</span><span class="ml-2">🔗</span></a>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="bg-white rounded-xl shadow-md overflow-hidden">
+<button class="accordion-header w-full flex justify-between items-center text-left p-6 focus:outline-none">
+<span class="text-lg font-semibold text-slate-800">2. 組成採購評選(審查)委員會及工作評審小組</span>
+<span class="accordion-icon text-2xl text-slate-500 transform transition-transform">▼</span>
+</button>
+<div class="accordion-content">
+<div class="px-6 pt-2 pb-6">
+<div class="border-t border-slate-200">
+<button class="sub-accordion-header w-full flex justify-between items-center text-left py-4 focus:outline-none">
+<span class="font-medium text-slate-700">01. 組成採購評選委員會(最有利標、準用最有利標、評分及格最低標)</span>
+<span class="sub-accordion-icon text-xl text-slate-500 transform transition-transform">▼</span>
+</button>
+<div class="sub-accordion-content">
+<div class="pl-4 pb-4 space-y-2">
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/1EC2dFCoEMhZ-6BnuPmlkYbeArNMD91NY/edit?usp=drive_link&amp;ouid=106903941524767612764&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>01_成立採購評選委員會簽(範例)</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/1eLw7syd9ht_eLHSWpajLzWpsLg1tzqoB/edit?usp=drive_link&amp;ouid=106903941524767612764&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>02_專家學者建議名單表格</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/1--oS7FjoF-_ZbVbcsHoFsIy-gwKphM9K/edit?usp=drive_link&amp;ouid=106903941524767612764&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>04_評選委員切結書(範本)</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/125gNAH5BWOd8Ivs9zgFH-wbJMif49aix/edit?usp=drive_link&amp;ouid=106903941524767612764&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>05_評選會議議程(範本)</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/1gDR4HvqT6O_hHsNjGmkZVmEpNgSJJEVi/edit?usp=drive_link&amp;ouid=106903941524767612764&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>06_評選委員意願調查表</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/154qbK3tbj2jAKbeRV8HBVOTXf9ADMR5p/edit?usp=drive_link&amp;ouid=106903941524767612764&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>07_評選會議簽到表-委員</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/1cJfA-C1GO7pvzNR8WfWzJaL1jUv_wrzi/edit?usp=drive_link&amp;ouid=106903941524767612764&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>07_評選會議簽到表-廠商</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/1xOE-JzioNaywF2aWjYAfPiB7y3a6mRfy/edit?usp=drive_link&amp;ouid=106903941524767612764&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>08_工作小組名單</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/1Nl0rKHUxaNGTpwWOD3JX09cqWG1k4LfW/edit?usp=drive_link&amp;ouid=106903941524767612764&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>09_(評選)召開會議之開會通知單(致委員)</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/1K5WG9uVmxezv7hs7U-Yb0rEmI7I4Mkgd/edit?usp=drive_link&amp;ouid=106903941524767612764&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>09_(評選)召開會議之開會通知單(致廠商)</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/1icwoIIY85Mjs2I0IbPTlwLFrwIfOO4Fc/edit?usp=drive_link&amp;ouid=106903941524767612764&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>10_評選(審)委員資料表(成立即公開)</span><span class="ml-2">🔗</span></a>
+</div>
+</div>
+</div>
+<div class="border-t border-slate-200">
+<button class="sub-accordion-header w-full flex justify-between items-center text-left py-4 focus:outline-none">
+<span class="font-medium text-slate-700">02. 組成評審小組(公開取得取最有利標精神)</span>
+<span class="sub-accordion-icon text-xl text-slate-500 transform transition-transform">▼</span>
+</button>
+<div class="sub-accordion-content">
+<div class="pl-4 pb-4 space-y-2">
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/10uyzPeWIQYMuqD36OvaQFcbtWmKBMZds/edit?usp=drive_link&amp;ouid=106903941524767612764&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>01_成立採購評審小組簽(範例)</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/1z5IuzZIWwUXyz2L6-a25QM9h0c1FoHb-/edit?usp=drive_link&amp;ouid=106903941524767612764&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>03_評選(審)委員資料表(成立即公開)</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/1-gAMIWUCpSEfgXH1ix5C8haaxt47uvFx/edit?usp=drive_link&amp;ouid=106903941524767612764&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>04_評審委員切結書(範本)</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/15r-3418a_qfQA8hxD7Bu36HBdDQYIzEF/edit?usp=drive_link&amp;ouid=106903941524767612764&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>07_評審會議簽到表-委員</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/1Zm2KlnJvPKubqdrcxkErkO2vr5VQvVry/edit?usp=drive_link&amp;ouid=106903941524767612764&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>07_評審會議簽到表-廠商</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/1Bjqf7RQ8fpNzbaMM_LAAhy8MGeSMXjoK/edit?usp=drive_link&amp;ouid=106903941524767612764&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>09_(評審)召開會議之開會通知單(致委員)</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/1-csf0jgwOz4GufZzKqF7g-nIlI9agfe1/edit?usp=drive_link&amp;ouid=106903941524767612764&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>09_(評審)召開會議之開會通知單(致廠商)</span><span class="ml-2">🔗</span></a>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="bg-white rounded-xl shadow-md overflow-hidden">
+<button class="accordion-header w-full flex justify-between items-center text-left p-6 focus:outline-none">
+<span class="text-lg font-semibold text-slate-800">3. 底價簽報及核定</span>
+<span class="accordion-icon text-2xl text-slate-500 transform transition-transform">▼</span>
+</button>
+<div class="accordion-content">
+<div class="px-6 pt-2 pb-6">
+<div class="border-t border-slate-200 pt-4">
+<div class="space-y-2">
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/spreadsheets/d/1eeuiPgXGNGZ3DhyPsFaGYFIbcfpHSx3b/edit?usp=drive_link&amp;ouid=106903941524767612764&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>01_預估金額分析表</span><span class="ml-2">🔗</span></a>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="bg-white rounded-xl shadow-md overflow-hidden">
+<button class="accordion-header w-full flex justify-between items-center text-left p-6 focus:outline-none">
+<span class="text-lg font-semibold text-slate-800">4. 評選(審查)階段</span>
+<span class="accordion-icon text-2xl text-slate-500 transform transition-transform">▼</span>
+</button>
+<div class="accordion-content">
+<div class="px-6 pt-2 pb-6">
+<div class="border-t border-slate-200">
+<button class="sub-accordion-header w-full flex justify-between items-center text-left py-4 focus:outline-none">
+<span class="font-medium text-slate-700">01. 評選委員會評選結果(最有利標、準用最有利標、評分及格最低標)之簽辦文件</span>
+<span class="sub-accordion-icon text-xl text-slate-500 transform transition-transform">▼</span>
+</button>
+<div class="sub-accordion-content">
+<div class="pl-4 pb-4 space-y-2">
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/1jvRejlWu08p29tlA2iIduaST411BYeCC/edit?usp=drive_link&amp;ouid=106903941524767612764&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>01_(評選)工作小組初審意見</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/1sstIx1J09tpkQqYiw4VyIDu5obrGFR8U/edit?usp=drive_link&amp;ouid=106903941524767612764&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>02_評選會議紀錄-最有利標(範例)</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/14LuHnXCPbufjfcfEuSg6LKD205Qa_spd/edit?usp=drive_link&amp;ouid=106903941524767612764&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>02_評選會議紀錄-準用最有利標(範例)</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/1Eikp0wi53xPS3FeIX6tVyqLF_7Yia4Ue/edit?usp=drive_link&amp;ouid=106903941524767612764&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>03_委員廠商詢答摘要(範例)</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/1ov719lDrdNPhokTteH7WBpu3oOXcE9rY/edit?usp=drive_link&amp;ouid=106903941524767612764&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>04_評選結果簽(範例)</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/1qDJnIZc4YuM4Iemd--bldIGaV6wwLrv7/edit?usp=drive_link&amp;ouid=106903941524767612764&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>05_函送廠商評選結果通知(範例)</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/1hkhdI9yjdbJL5KMQ2558kN-sYBUQdJ7c/edit?usp=drive_link&amp;ouid=106903941524767612764&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>06_函送評選委員會議結果(範例)</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/1ZWWzEXfkJQ02DfmD4qwTOdUQjThHxzAr/edit?usp=drive_link&amp;ouid=106903941524767612764&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>07_採購評選委員滿意度評鑑調查表(上網辦理公告用)</span><span class="ml-2">🔗</span></a>
+</div>
+</div>
+</div>
+<div class="border-t border-slate-200">
+<button class="sub-accordion-header w-full flex justify-between items-center text-left py-4 focus:outline-none">
+<span class="font-medium text-slate-700">02. 評審小組評審結果(公開取得取最有利標精神)之簽辦文件</span>
+<span class="sub-accordion-icon text-xl text-slate-500 transform transition-transform">▼</span>
+</button>
+<div class="sub-accordion-content">
+<div class="pl-4 pb-4 space-y-2">
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/1H35yu3hxnI4xZuecmXKL2LeydIAY23DE/edit?usp=drive_link&amp;ouid=106903941524767612764&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>01_(評審)請購單位初審意見</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/1LjFtJDZwDVMt4LbGIcrQ2a0MQg3WqXGb/edit?usp=drive_link&amp;ouid=106903941524767612764&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>02_評審會議紀錄(範例)</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/1rcnm7IFtzT0iAQ86Xxv0mcOoNXHIV5QF/edit?usp=drive_link&amp;ouid=106903941524767612764&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>03_委員廠商詢答摘要(範例)</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/1P_PSUKTZPANZqDgooEBbzFDmVs5Nee8V/edit?usp=drive_link&amp;ouid=106903941524767612764&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>04_評審結果簽(範例)</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/1JBk-K7zMyxtvdCcqXjEksm0HUtk7GyCW/edit?usp=drive_link&amp;ouid=106903941524767612764&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>05_函送廠商評審結果通知(範例)</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/1xkBXbMDqrWOQ2LbsEMRmKBZ_nZqvzdWm/edit?usp=drive_link&amp;ouid=106903941524767612764&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>06_函送評審委員會議紀錄(範例)</span><span class="ml-2">🔗</span></a>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="bg-white rounded-xl shadow-md overflow-hidden">
+<button class="accordion-header w-full flex justify-between items-center text-left p-6 focus:outline-none">
+<span class="text-lg font-semibold text-slate-800">5. 決標及簽約</span>
+<span class="accordion-icon text-2xl text-slate-500 transform transition-transform">▼</span>
+</button>
+<div class="accordion-content">
+<div class="px-6 pt-2 pb-6">
+<div class="border-t border-slate-200 pt-4">
+<div class="space-y-2">
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/spreadsheets/d/1ep0gs-DuVpPEInyNB81fBifPSve5gpkT/edit?usp=drive_link&amp;ouid=106903941524767612764&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>01_議價後調整後金額明細表</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/12RTx2C7vHqp_yqS4oXfCyhyMNhz_9X6_/edit?usp=drive_link&amp;ouid=106903941524767612764&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>02_價格以外之議定項目</span><span class="ml-2">🔗</span></a>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="bg-white rounded-xl shadow-md overflow-hidden">
+<button class="accordion-header w-full flex justify-between items-center text-left p-6 focus:outline-none">
+<span class="text-lg font-semibold text-slate-800">6. 契約之變更</span>
+<span class="accordion-icon text-2xl text-slate-500 transform transition-transform">▼</span>
+</button>
+<div class="accordion-content">
+<div class="px-6 pt-2 pb-6">
+<div class="border-t border-slate-200 pt-4">
+<div class="space-y-2">
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/1ADsGJNl5EQrO6h418oqLMOG_43WWLUGh/edit?usp=drive_link&amp;ouid=106903941524767612764&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>01_契約變更請購簽</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/1rog5VzDluihpRkjmu8McD9l3-yUhvbm4/edit?usp=drive_link&amp;ouid=106903941524767612764&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>02_契約變更議價須知</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/1NokdHFWrNR513dVncVjd6P4-QN93YhKn/edit?usp=drive_link&amp;ouid=106903941524767612764&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>03_契約變更條款(範本)</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/1Kc3pxKNwHa5Vf0EB3xH-Y5PhtmrUkFVS/edit?usp=drive_link&amp;ouid=106903941524767612764&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>03_契約變更對照表(範本)</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/147lMW2BNlfq9hyGrw1wwFw9qBbZQSzEC/edit?usp=drive_link&amp;ouid=106903941524767612764&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>05_契約變更委託代理授權書</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/1AUicuEjH68L2QT0tlZqytZuWoyxRZqhB/edit?usp=drive_link&amp;ouid=106903941524767612764&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>06_契約變更投標廠商聲明書</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/1QuyBNBtmUVOmKBvTIMx1FVJQl8Ere_4t/edit?usp=drive_link&amp;ouid=106903941524767612764&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>08_契約變更預算編列分析表</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/1Xe5SnR6jCbh3Nt95oCzbnHUljGQW1yG-/edit?usp=drive_link&amp;ouid=106903941524767612764&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>08_契約變更價格標單(最低標適用)</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/1NCWQlem2gmZj4Xb4ANL7Y55JFmJ9C5RK/edit?usp=drive_link&amp;ouid=106903941524767612764&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>08_契約變更價格標單及其組成說明</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/spreadsheets/d/1ABoyH7CSSO5xi623suJ9e_7RLi4H7mCm/edit?usp=drive_link&amp;ouid=106903941524767612764&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>09_原契約及歷次變更契約加減帳金額彙整表</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/1cDEa8_88XQHdaWZohHxyTyK2Z6B8XNYg/edit?usp=drive_link&amp;ouid=106903941524767612764&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>10_預算編列分析表</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://drive.google.com/file/d/1KpU38-skfxlxcgE35xrd06QAwiYCGhK3/view?usp=drive_link" rel="noopener noreferrer" target="_blank"><span>11_工作項目及加減帳金額表</span><span class="ml-2">🔗</span></a>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="bg-white rounded-xl shadow-md overflow-hidden">
+<button class="accordion-header w-full flex justify-between items-center text-left p-6 focus:outline-none">
+<span class="text-lg font-semibold text-slate-800">7. 驗收階段</span>
+<span class="accordion-icon text-2xl text-slate-500 transform transition-transform">▼</span>
+</button>
+<div class="accordion-content">
+<div class="px-6 pt-2 pb-6">
+<div class="border-t border-slate-200 pt-4">
+<div class="space-y-2">
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/1syb4BMcK8xoiudU2v0pQ8aDNwXG2oVKx/edit?usp=drive_link&amp;ouid=106903941524767612764&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>01_書面驗收簽</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/1R7R9MOaPtGEZhJ4RdsroQ5RxeSx2Fkiq/edit?usp=drive_link&amp;ouid=106903941524767612764&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>02_書面驗收情況表</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/1iWEvT4-WZRnCHPHggVkQ432-HLcIceTP/edit?usp=drive_link&amp;ouid=106903941524767612764&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>02_資訊服務驗收紀錄(範例)</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/1eBaqnuy-Ahr4KV_YWQHY5819z7XUnMMN/edit?usp=drive_link&amp;ouid=106903941524767612764&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>02_勞務委託研究案驗收紀錄(範例)</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/1DX1mGWcZ-fr0C7D4bisx5_3ETXT5lwuO/edit?usp=drive_link&amp;ouid=106903941524767612764&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>02_驗收紀錄(範例)</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/1NWlpQ_EWMo6viqgd5lt7Xli0HRBMrQy_/edit?usp=drive_link&amp;ouid=106903941524767612764&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>03_廠商完成履約事項檢核表(小額採購適用)</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/1sR7JtVB3KJv8bNRKQtQ3wOCusuhULQbK/edit?usp=drive_link&amp;ouid=106903941524767612764&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>03_廠商完成履約事項檢核表(驗收前填寫)</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/15xRX5ALpU8hl_hdeC0tmBxBNQ0TFKjQi/edit?usp=drive_link&amp;ouid=106903941524767612764&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>04_驗收紀錄結果簽</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/1-YRxP4_xF-idxjAFG3sCrISsPPrpfFai/edit?usp=drive_link&amp;ouid=106903941524767612764&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>05_結算驗收證明書格式</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/spreadsheets/d/1fXUz89ckjkP42b9lT7nF_0aQ41v-zCZY/edit?usp=drive_link&amp;ouid=106903941524767612764&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>06_數位發展部採購案件契約變更檢核表(驗收前填寫)</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/1xxXEMC5xVsRaCK4HePwUYRbsPbLPTfLk/edit?usp=drive_link&amp;ouid=106903941524767612764&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>07_驗收開會通知單</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/1ei6uvyrMD1AAspm6Bx-Ry6jNVvz1R1Gp/edit?usp=drive_link&amp;ouid=106903941524767612764&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>08_共同供應契約簽收及驗收資料(小額採購適用)</span><span class="ml-2">🔗</span></a>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://docs.google.com/document/d/1F0lfG8hhAOI4Zu_QgGlQYNAcpbkvjOVD/edit?usp=drive_link&amp;ouid=106903941524767612764&amp;rtpof=true&amp;sd=true" rel="noopener noreferrer" target="_blank"><span>09_委託代理授權書</span><span class="ml-2">🔗</span></a>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+    </main>
+  </div>
+
+  <button id="backToTop" class="hidden" type="button" aria-label="回到頁首">↑ 回到頁首</button>
+</div>
+
+<script>
+(function(){
+  const header = document.querySelector('.site-header');
+  const toggle = document.getElementById('navToggle');
+  const nav = document.getElementById('siteNav');
+  if (!header || !toggle || !nav) return;
+
+  const setOpen = (open) => {
+    header.classList.toggle('nav-open', !!open);
+    toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+  };
+
+  toggle.addEventListener('click', () => {
+    const open = header.classList.contains('nav-open');
+    setOpen(!open);
+  });
+
+  // close after clicking a link (mobile)
+  nav.addEventListener('click', (e) => {
+    const a = e.target.closest('a');
+    if (!a) return;
+    setOpen(false);
+  });
+
+  // highlight current page
+  const current = (location.pathname.split('/').pop() || 'index.html').toLowerCase();
+  nav.querySelectorAll('a.nav-link').forEach(a => {
+    const href = (a.getAttribute('href') || '').toLowerCase();
+    if (href === current || (current === 'index.html' && href === 'docs.html')) {
+      a.classList.add('is-active');
+    }
+  });
+})();
+</script>
+
+<script>
+/* ===== Procurement Portal UI (Google Sites friendly) ===== */
+(function () {
+  const patchMxgraphNodes = () => {
+    const nodes = document.querySelectorAll(".mxgraph[data-mxgraph]");
+    nodes.forEach((node) => {
+      const raw = node.getAttribute("data-mxgraph");
+      if (!raw) return;
+      try { JSON.parse(raw); } catch (e) {
+        const fixed = raw
+          .replace(/("#0000ff")("nav")/g, '$1,$2')
+          .replace(/("false")("toolbar")/g, '$1,$2')
+          .replace(/("lightbox")("edit")/g, '$1,$2')
+          .replace(/("_blank")("xml")/g, '$1,$2');
+        node.setAttribute("data-mxgraph", fixed);
+      }
+    });
+  };
+
+  // Robust accordion: avoid "被下面卡片蓋住" by keeping opened containers' max-height large enough.
+  const openContent = (content) => {
+    if (!content) return;
+    // 1) animate to the real height
+    content.style.maxHeight = content.scrollHeight + "px";
+    // 2) after animation, unlock to a very large value so nested items won't clip
+    window.clearTimeout(content.__unlockTimer);
+    content.__unlockTimer = window.setTimeout(() => {
+      if (content.style.maxHeight !== "0px") content.style.maxHeight = "9999px";
+    }, 460);
+  };
+
+  const closeContent = (content) => {
+    if (!content) return;
+    window.clearTimeout(content.__unlockTimer);
+    // If it was "unlocked" (9999px), set back to current height first to animate smoothly
+    content.style.maxHeight = content.scrollHeight + "px";
+    requestAnimationFrame(() => {
+      content.style.maxHeight = "0px";
+    });
+  };
+
+  const collapseAll = () => {
+    document.querySelectorAll(".accordion-content, .sub-accordion-content").forEach((c) => {
+      window.clearTimeout(c.__unlockTimer);
+      c.style.maxHeight = "0px";
+    });
+    document.querySelectorAll(".accordion-header.active, .sub-accordion-header.active").forEach((h) => {
+      h.classList.remove("active");
+    });
+  };
+
+  const initAccordions = () => {
+    document.addEventListener("click", function (event) {
+      const header = event.target.closest(".accordion-header, .sub-accordion-header");
+      if (!header) return;
+
+      const content = header.nextElementSibling;
+      const isOpening = !header.classList.contains("active");
+
+      header.classList.toggle("active");
+
+      if (isOpening) openContent(content);
+      else closeContent(content);
+    });
+
+    // On resize/orientation change, keep opened content visible
+    window.addEventListener("resize", () => {
+      document.querySelectorAll(".accordion-header.active, .sub-accordion-header.active").forEach((h) => {
+        const c = h.nextElementSibling;
+        if (c) c.style.maxHeight = "9999px";
+      });
+    }, { passive: true });
+  };
+
+  const initBackToTop = () => {
+    const btn = document.getElementById("backToTop");
+    if (!btn) return;
+    const onScroll = () => {
+      if (window.scrollY > 600) btn.classList.remove("hidden");
+      else btn.classList.add("hidden");
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    btn.addEventListener("click", () => window.scrollTo({ top: 0, behavior: "smooth" }));
+    onScroll();
+  };
+
+  document.addEventListener("DOMContentLoaded", () => {
+    patchMxgraphNodes();
+    collapseAll();
+    initAccordions();
+    initBackToTop();
+  });
+})();
+</script>
+</body>
+</html>
