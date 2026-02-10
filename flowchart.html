@@ -198,7 +198,7 @@ a.flex > span:first-child { min-width:0; flex:1 1 auto; overflow-wrap:anywhere; 
 <span class="accordion-icon text-2xl text-slate-500 transform transition-transform">▼</span>
 </button>
 <div class="accordion-content">
-<div class="p-6"><div class="flowchart-wrap"><a aria-label="開啟準用最有利標流程圖SVG原檔" href="assets/quasi_best_value_flow.svg" rel="noopener noreferrer" target="_blank"><img alt="準用最有利標流程圖" loading="lazy" src="assets/quasi_best_value_flow.svg"/></a></div><div class="flowchart-tip">提示：點擊圖片可在新分頁開啟 SVG 原檔，方便放大查看；手機可左右滑動。</div></div>
+<div class="p-6"><div class="flowchart-wrap"><a aria-label="開啟準用最有利標流程圖SVG原檔" href="quasi_best_value_flow.svg" rel="noopener noreferrer" target="_blank"><img alt="準用最有利標流程圖" loading="lazy" src="quasi_best_value_flow.svg"/></a></div><div class="flowchart-tip">提示：點擊圖片可在新分頁開啟 SVG 原檔，方便放大查看；手機可左右滑動。</div></div>
 </div>
 </div>
 <!-- 最有利標 -->
@@ -208,7 +208,7 @@ a.flex > span:first-child { min-width:0; flex:1 1 auto; overflow-wrap:anywhere; 
 <span class="accordion-icon text-2xl text-slate-500 transform transition-transform">▼</span>
 </button>
 <div class="accordion-content">
-<div class="p-6"><div class="flowchart-wrap"><a aria-label="開啟最有利標流程圖SVG原檔" href="assets/best_value_flow.svg" rel="noopener noreferrer" target="_blank"><img alt="最有利標流程圖" loading="lazy" src="assets/best_value_flow.svg"/></a></div><div class="flowchart-tip">提示：點擊圖片可在新分頁開啟 SVG 原檔，方便放大查看；手機可左右滑動。</div></div>
+<div class="p-6"><div class="flowchart-wrap"><a aria-label="開啟最有利標流程圖SVG原檔" href="best_value_flow.svg" rel="noopener noreferrer" target="_blank"><img alt="最有利標流程圖" loading="lazy" src="best_value_flow.svg"/></a></div><div class="flowchart-tip">提示：點擊圖片可在新分頁開啟 SVG 原檔，方便放大查看；手機可左右滑動。</div></div>
 </div>
 </div>
 <!-- 參考最有利標精神 -->
@@ -218,7 +218,7 @@ a.flex > span:first-child { min-width:0; flex:1 1 auto; overflow-wrap:anywhere; 
 <span class="accordion-icon text-2xl text-slate-500 transform transition-transform">▼</span>
 </button>
 <div class="accordion-content">
-<div class="p-6"><div class="flowchart-wrap"><a aria-label="開啟參考最有利標精神流程圖SVG原檔" href="assets/best_value_spirit_flow.svg" rel="noopener noreferrer" target="_blank"><img alt="參考最有利標精神流程圖" loading="lazy" src="assets/best_value_spirit_flow.svg"/></a></div><div class="flowchart-tip">提示：點擊圖片可在新分頁開啟 SVG 原檔，方便放大查看；手機可左右滑動。</div></div>
+<div class="p-6"><div class="flowchart-wrap"><a aria-label="開啟參考最有利標精神流程圖SVG原檔" href="best_value_spirit_flow.svg" rel="noopener noreferrer" target="_blank"><img alt="參考最有利標精神流程圖" loading="lazy" src="best_value_spirit_flow.svg"/></a></div><div class="flowchart-tip">提示：點擊圖片可在新分頁開啟 SVG 原檔，方便放大查看；手機可左右滑動。</div></div>
 </div>
 </div>
 </div>
@@ -279,7 +279,7 @@ a.flex > span:first-child { min-width:0; flex:1 1 auto; overflow-wrap:anywhere; 
         if (wrap && !wrap.querySelector(".flowchart-error")) {
           const div = document.createElement("div");
           div.className = "flowchart-error";
-          div.innerHTML = "找不到流程圖 SVG 檔案。請確認 GitHub Repo 根目錄有上傳 <b>assets/</b> 資料夾（含 SVG 檔），並且路徑大小寫正確。";
+          div.innerHTML = "找不到流程圖 SVG 檔案。請確認這三個檔案已上傳到 Repo 根目錄：<b>quasi_best_value_flow.svg</b>、<b>best_value_flow.svg</b>、<b>best_value_spirit_flow.svg</b>（檔名大小寫需完全一致）。";
           wrap.appendChild(div);
         }
         if (content.style.maxHeight !== "0px") content.style.maxHeight = content.scrollHeight + "px";
