@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>首頁｜數位發展部採購專區</title>
+<title>智慧問答｜數位發展部採購專區</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <style>
 
@@ -178,34 +178,18 @@ a.flex > span:first-child { min-width:0; flex:1 1 auto; overflow-wrap:anywhere; 
 </header>
 
 <div class="page-wrap">
-
-<div class="bg-white rounded-2xl p-8 md:p-12 border border-slate-200">
-  <h1 class="text-2xl md:text-3xl font-bold text-slate-900">數位發展部・採購專區</h1>
-  <p class="mt-3 text-slate-600">本網站提供採購文件、流程圖、法令與函釋等資源，並提供 NotebookLM 智慧問答入口。</p>
-  <div class="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-    <a class="bg-slate-50 hover:bg-white rounded-2xl p-5 border border-slate-200 shadow-sm hover:shadow-md transition" href="docs.html">
-      <div class="font-bold text-slate-900">採購文件</div>
-      <div class="text-slate-500 mt-1 text-sm">招標文件、範本、常用表單與資源</div>
-    </a>
-    <a class="bg-slate-50 hover:bg-white rounded-2xl p-5 border border-slate-200 shadow-sm hover:shadow-md transition" href="flowchart.html">
-      <div class="font-bold text-slate-900">採購流程圖</div>
-      <div class="text-slate-500 mt-1 text-sm">流程視覺化與操作步驟</div>
-    </a>
-    <a class="bg-slate-50 hover:bg-white rounded-2xl p-5 border border-slate-200 shadow-sm hover:shadow-md transition" href="laws.html">
-      <div class="font-bold text-slate-900">相關法令及解釋函</div>
-      <div class="text-slate-500 mt-1 text-sm">含關鍵字搜尋、展開與紅字高亮</div>
-    </a>
-    <a class="bg-slate-50 hover:bg-white rounded-2xl p-5 border border-slate-200 shadow-sm hover:shadow-md transition" href="qa.html">
-      <div class="font-bold text-slate-900">智慧問答</div>
-      <div class="text-slate-500 mt-1 text-sm">連結至 NotebookLM（新分頁開啟）</div>
-    </a>
-    <a class="bg-slate-50 hover:bg-white rounded-2xl p-5 border border-slate-200 shadow-sm hover:shadow-md transition" href="pcc.html">
-      <div class="font-bold text-slate-900">工程會解釋函</div>
-      <div class="text-slate-500 mt-1 text-sm">連結至工程會解釋函查詢系統</div>
-    </a>
-  </div>
+<div class="bg-slate-100 rounded-2xl p-8 md:p-12 text-center">
+<h3 class="text-2xl font-bold text-slate-900">對採購流程有疑問嗎？</h3>
+<p class="mt-4 max-w-2xl mx-auto text-lg text-slate-600">
+                        試試我們的智慧問答助理！我們已將所有法規、範本及常見問答匯入NotebookLM，您可用自然語言提問，系統將根據資料庫內容生成回覆。
+                    </p>
+<div class="mt-8">
+<a class="inline-flex items-center justify-center px-8 py-4 border border-transparent text-base font-medium rounded-full text-white bg-slate-800 hover:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-500 transition shadow-lg hover:shadow-xl" href="https://notebooklm.google.com/notebook/e8fa79f7-737e-40fa-8af0-3f1bb3d71b09" rel="noopener noreferrer" target="_blank">
+                            開啟智慧問答助理
+                        </a>
 </div>
-
+<p class="mt-6 text-xs text-slate-500">提醒：點擊後將在新分頁開啟NotebookLM。所有回覆僅供參考，實際執行仍應以最新公告之法規為準。</p>
+</div>
 </div>
 <button id="backToTop" class="hidden" type="button" aria-label="回到頁首">↑ 回到頁首</button>
 
@@ -234,16 +218,172 @@ a.flex > span:first-child { min-width:0; flex:1 1 auto; overflow-wrap:anywhere; 
 
 
 <script>
-(function(){
-  const btn = document.getElementById("backToTop");
-  if (!btn) return;
-  const onScroll = () => {
-    if (window.scrollY > 600) btn.classList.remove("hidden");
-    else btn.classList.add("hidden");
+/* ===== MODA Procurement Site JS (GitHub Pages) ===== */
+(function () {
+  const openContent = (content) => {
+    if (!content) return;
+    content.style.maxHeight = content.scrollHeight + "px";
+    window.clearTimeout(content.__unlockTimer);
+    content.__unlockTimer = window.setTimeout(() => {
+      if (content.style.maxHeight !== "0px") content.style.maxHeight = "9999px";
+    }, 460);
   };
-  window.addEventListener("scroll", onScroll, { passive: true });
-  btn.addEventListener("click", () => window.scrollTo({ top: 0, behavior: "smooth" }));
-  onScroll();
+
+  const closeContent = (content) => {
+    if (!content) return;
+    window.clearTimeout(content.__unlockTimer);
+    content.style.maxHeight = content.scrollHeight + "px";
+    requestAnimationFrame(() => { content.style.maxHeight = "0px"; });
+  };
+
+  const collapseAllAccordions = (root=document) => {
+    root.querySelectorAll(".accordion-content, .sub-accordion-content").forEach((c) => {
+      window.clearTimeout(c.__unlockTimer);
+      c.style.maxHeight = "0px";
+    });
+    root.querySelectorAll(".accordion-header.active, .sub-accordion-header.active").forEach((h) => {
+      h.classList.remove("active");
+    });
+  };
+
+  const initAccordions = () => {
+    document.addEventListener("click", function (event) {
+      const header = event.target.closest(".accordion-header, .sub-accordion-header");
+      if (!header) return;
+
+      const content = header.nextElementSibling;
+      const opening = !header.classList.contains("active");
+      header.classList.toggle("active");
+      if (opening) openContent(content);
+      else closeContent(content);
+    });
+
+    // initial collapse (stable)
+    collapseAllAccordions();
+  };
+
+  // Highlight helpers
+  const removeHighlights = (container) => {
+    if (!container) return;
+    const highlights = container.querySelectorAll("span.search-highlight");
+    highlights.forEach((node) => {
+      const parent = node.parentNode;
+      if (!parent) return;
+      parent.replaceChild(document.createTextNode(node.textContent), node);
+      parent.normalize();
+    });
+  };
+
+  const applyHighlights = (container, term) => {
+    if (!container || !term) return;
+    const escaped = term.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    const regex = new RegExp("(" + escaped + ")", "gi");
+    const targets = container.querySelectorAll(".text-lg, .font-semibold, .font-medium, a > span:first-child");
+
+    targets.forEach((el) => {
+      const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
+      const textNodes = [];
+      let n;
+      while ((n = walker.nextNode())) textNodes.push(n);
+
+      textNodes.forEach((node) => {
+        const text = node.nodeValue;
+        if (!text || !regex.test(text)) return;
+
+        const fragment = document.createDocumentFragment();
+        const parts = text.split(regex);
+        for (let i = 0; i < parts.length; i++) {
+          if (i % 2 === 0) {
+            if (parts[i]) fragment.appendChild(document.createTextNode(parts[i]));
+          } else {
+            const span = document.createElement("span");
+            span.className = "search-highlight";
+            span.style.color = "#D32F2F";
+            span.style.fontWeight = "bold";
+            span.textContent = parts[i];
+            fragment.appendChild(span);
+          }
+        }
+        node.parentNode.replaceChild(fragment, node);
+      });
+    });
+  };
+
+  const initLawSearch = () => {
+    const input = document.getElementById("lawSearchInput");
+    const list = document.getElementById("lawList");
+    if (!input || !list) return;
+
+    const items = Array.from(list.querySelectorAll(".law-item"));
+    if (!items.length) return;
+
+    input.addEventListener("input", function () {
+      const term = this.value.trim();
+      const termLower = term.toLowerCase();
+
+      removeHighlights(list);
+      items.forEach((item) => {
+        item.style.display = "";
+        collapseAllAccordions(item);
+      });
+
+      if (!term) return;
+
+      let firstMatch = null;
+
+      items.forEach((item) => {
+        const text = item.textContent.toLowerCase();
+        const match = text.includes(termLower);
+        if (!match) {
+          item.style.display = "none";
+          return;
+        }
+
+        if (!firstMatch) firstMatch = item;
+
+        applyHighlights(item, term);
+
+        const mainHeader = item.querySelector(".accordion-header");
+        const mainContent = item.querySelector(".accordion-content");
+        if (mainHeader && mainContent) {
+          mainHeader.classList.add("active");
+          openContent(mainContent);
+
+          const subHeaders = mainContent.querySelectorAll(".sub-accordion-header");
+          subHeaders.forEach((subHeader) => {
+            const subContent = subHeader.nextElementSibling;
+            const subText = (subHeader.textContent + (subContent ? subContent.textContent : "")).toLowerCase();
+            if (subText.includes(termLower)) {
+              subHeader.classList.add("active");
+              openContent(subContent);
+            }
+          });
+        }
+      });
+
+      if (firstMatch) {
+        firstMatch.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    });
+  };
+
+  const initBackToTop = () => {
+    const btn = document.getElementById("backToTop");
+    if (!btn) return;
+    const onScroll = () => {
+      if (window.scrollY > 600) btn.classList.remove("hidden");
+      else btn.classList.add("hidden");
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    btn.addEventListener("click", () => window.scrollTo({ top: 0, behavior: "smooth" }));
+    onScroll();
+  };
+
+  document.addEventListener("DOMContentLoaded", () => {
+    initAccordions();
+    initLawSearch();
+    initBackToTop();
+  });
 })();
 </script>
 

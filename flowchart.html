@@ -3,9 +3,26 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>採購流程圖｜數位發展部採購專區</title>
 <script src="https://cdn.tailwindcss.com"></script>
-<style>
 
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('.mxgraph[data-mxgraph]').forEach(node => {
+    const raw = node.getAttribute('data-mxgraph');
+    if (!raw) return;
+    const fixed = raw
+      .replace(/("#0000ff")("nav")/g, '$1,$2')
+      .replace(/("false")("toolbar")/g, '$1,$2')
+      .replace(/("lightbox")("edit")/g, '$1,$2')
+      .replace(/("_blank")("xml")/g, '$1,$2');
+    if (fixed !== raw) node.setAttribute('data-mxgraph', fixed);
+  });
+});
+</script>
+
+<script src="https://viewer.diagrams.net/js/viewer-static.min.js"></script>
+<style>
 
         body {
             font-family: 'Inter', 'Noto Sans TC', sans-serif;
@@ -30,214 +47,16 @@
             color: #1e40af;
         }
     
-        /* === Responsive Fix Pack (for Google Sites / Mobile) === */
-        html, body {
-            width: 100%;
-            max-width: 100%;
-            overflow-x: hidden;
-        }
-        /* Prevent flex children from forcing a wider layout viewport on mobile */
-        #app, main, section, nav, .tab-panel, .accordion-content, .sub-accordion-content {
-            min-width: 0;
-        }
-        .accordion-header, .sub-accordion-header, a.flex {
-            min-width: 0;
-            gap: 0.5rem; /* keeps icon separated when text wraps */
-        }
-        .accordion-header > span:first-child,
-        .sub-accordion-header > span:first-child,
-        a.flex > span:first-child {
-            min-width: 0;
-            flex: 1 1 auto;
-            overflow-wrap: anywhere;
-            word-break: break-word;
-        }
-        .accordion-icon, .sub-accordion-icon, a.flex > span:last-child {
-            flex: 0 0 auto;
-        }
-
-        /* Diagrams.net / mxgraph: keep big diagrams from expanding the page width */
-        .mxgraph {
-            max-width: 100% !important;
-            overflow-x: auto;
-            -webkit-overflow-scrolling: touch;
-        }
-        .mxgraph svg, .mxgraph img, .mxgraph canvas, .mxgraph > div, .mxgraph > svg {
-            max-width: 100% !important;
-            height: auto !important;
-        }
-
-        /* Safety: long strings (URLs / IDs) */
-        a, p, span {
-            overflow-wrap: anywhere;
-        }
-        /* === End Responsive Fix Pack === */
-
-    
-        /* === Tabs Mobile Polish === */
-        /* Turn the top tab bar into a neat grid on phones (no ugly horizontal scrollbar) */
-        @media (max-width: 640px) {
-            nav[aria-label="Tabs"] {
-                display: grid !important;
-                grid-template-columns: repeat(2, minmax(0, 1fr));
-                gap: 0.25rem 0.75rem;
-                overflow-x: visible !important;
-                padding-bottom: 0.25rem;
-            }
-            /* Cancel Tailwind space-x-* margins when in grid mode */
-            nav[aria-label="Tabs"] > :not([hidden]) ~ :not([hidden]) {
-                margin-left: 0 !important;
-            }
-            nav[aria-label="Tabs"] .tab-link {
-                white-space: normal !important;
-                text-align: center;
-                line-height: 1.2;
-                padding: 0.65rem 0.25rem;
-                font-size: 0.875rem; /* ~text-sm */
-            }
-        }
-        /* Slightly tighten on very small screens */
-        @media (max-width: 380px) {
-            nav[aria-label="Tabs"] {
-                grid-template-columns: 1fr;
-                gap: 0.25rem;
-            }
-            nav[aria-label="Tabs"] .tab-link {
-                font-size: 0.875rem;
-            }
-        }
-        /* === End Tabs Mobile Polish === */
-
-    
-        /* === Mobile Collapsible Tabs (phones) === */
-        @media (max-width: 640px) {
-            /* Hide the tabs by default; show only when expanded */
-            #tabsNav {
-                display: none !important;
-                flex-direction: column !important;
-                gap: 0 !important;
-                overflow: hidden !important;
-                padding-top: 0.25rem;
-                padding-bottom: 0.25rem;
-            }
-            #tabsBar.tabs-open #tabsNav {
-                display: flex !important;
-            }
-            /* Cancel Tailwind space-x-* margins (because the nav keeps `space-x-8`) */
-            #tabsNav > :not([hidden]) ~ :not([hidden]) {
-                margin-left: 0 !important;
-            }
-            /* Make each tab a full-width row for easier tapping */
-            #tabsNav .tab-link {
-                width: 100%;
-                text-align: left;
-                padding: 0.75rem 0;
-                border-bottom: 1px solid rgba(226, 232, 240, 1);
-                white-space: normal !important;
-                line-height: 1.2;
-            }
-            #tabsNav .tab-link:last-child { border-bottom: none; }
-
-            /* Rotate chevron when open */
-            #tabsBar.tabs-open #mobileTabsChevron {
-                transform: rotate(180deg);
-            }
-        }
-        /* === End Mobile Collapsible Tabs === */
-
-    
-
-/* === Google Sites / Visual Polish Pack === */
-html, body { margin: 0; padding: 0; background: #f8fafc; }
-body { font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", Arial, "Apple Color Emoji", "Segoe UI Emoji"; }
-::selection { background: rgba(37, 99, 235, 0.18); }
-a { text-decoration-thickness: 2px; text-underline-offset: 3px; }
-
-/* Slightly nicer card + hover */
-.bg-white.rounded-xl.shadow-md { 
-  border: 1px solid rgba(226, 232, 240, 0.9);
-  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
-}
-.bg-white.rounded-xl.shadow-md:hover {
-  box-shadow: 0 12px 32px rgba(15, 23, 42, 0.10);
-}
-
-/* Accordion headers: hover + focus */
-.accordion-header, .sub-accordion-header {
-  transition: background-color .15s ease, transform .15s ease;
-}
-.accordion-header:hover, .sub-accordion-header:hover {
-  background-color: rgba(248, 250, 252, 1);
-}
-.accordion-header:focus-visible, .sub-accordion-header:focus-visible {
-  outline: 3px solid rgba(37, 99, 235, 0.25);
-  outline-offset: 2px;
-  border-radius: 12px;
-}
-
-/* Page wrapper */
-.proc-wrap {
-  min-height: auto;
-  background: linear-gradient(to bottom, rgba(248, 250, 252, 1), rgba(255, 255, 255, 1));
-}
-.proc-container {
-  max-width: 72rem;
-  margin: 0 auto;
-  padding: 1.25rem 1rem 1.5rem;
-}
-@media (min-width: 640px) { .proc-container { padding: 2rem 1.5rem 2.5rem; } }
-@media (min-width: 1024px) { .proc-container { padding: 2.25rem 2rem 3rem; } }
-
-.proc-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: .5rem;
-  padding: .35rem .75rem;
-  border: 1px solid rgba(226, 232, 240, 1);
-  border-radius: 999px;
-  background: rgba(255, 255, 255, .75);
-  backdrop-filter: blur(8px);
-  box-shadow: 0 6px 18px rgba(15, 23, 42, 0.06);
-  color: #475569;
-  font-size: .875rem;
-}
-.proc-title { margin-top: .75rem; font-weight: 800; color: #0f172a; letter-spacing: -0.02em; }
-.proc-subtitle { margin-top: .25rem; color: #64748b; }
-
-/* Back-to-top button */
-#backToTop {
-  position: fixed;
-  right: 14px;
-  bottom: 14px;
-  z-index: 50;
-  padding: .65rem .75rem;
-  border-radius: 999px;
-  border: 1px solid rgba(226, 232, 240, 1);
-  background: rgba(255, 255, 255, .92);
-  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.12);
-  color: #0f172a;
-  font-weight: 600;
-}
-#backToTop:hover { transform: translateY(-1px); }
-.hidden { display: none !important; }
-
-/* === Embed Height Helper (Google Sites) === */
-@media (max-width: 640px) {
-  .proc-subtitle { margin-bottom: .25rem; }
-  main.mt-6 { margin-top: 1rem !important; }
-}
-/* === End Embed Height Helper === */
-
-/* === End Visual Polish Pack === */
-
-
 
 /* === Top Navigation (GitHub Pages) === */
+html, body { margin: 0; padding: 0; background: #f8fafc; overflow-x: hidden; }
+body { font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", Arial; }
+
 .site-header{
   position: sticky;
   top: 0;
   z-index: 60;
-  background: rgba(248,250,252,.85);
+  background: rgba(248,250,252,.90);
   backdrop-filter: blur(10px);
   border-bottom: 1px solid rgba(226,232,240,1);
 }
@@ -264,6 +83,7 @@ a { text-decoration-thickness: 2px; text-underline-offset: 3px; }
   box-shadow: 0 6px 18px rgba(37, 99, 235, .25);
 }
 .brand-text{ font-size: 1rem; }
+
 .site-nav{
   margin-left: auto;
   display: flex;
@@ -284,11 +104,12 @@ a { text-decoration-thickness: 2px; text-underline-offset: 3px; }
   background: rgba(37,99,235,.10);
   color: #1d4ed8;
 }
+
 .nav-toggle{
   margin-left: auto;
   display: none;
   border: 1px solid rgba(226,232,240,1);
-  background: rgba(255,255,255,.85);
+  background: rgba(255,255,255,.90);
   border-radius: 12px;
   padding: .5rem .6rem;
   box-shadow: 0 10px 30px rgba(15,23,42,.10);
@@ -317,8 +138,35 @@ a { text-decoration-thickness: 2px; text-underline-offset: 3px; }
 }
 /* === End Top Navigation === */
 
+/* === Responsive fix for long text + diagrams === */
+#app, main, section, nav, .accordion-content, .sub-accordion-content { min-width: 0; }
+.accordion-header, .sub-accordion-header, a.flex { min-width:0; gap:.5rem; }
+.accordion-header > span:first-child,
+.sub-accordion-header > span:first-child,
+a.flex > span:first-child { min-width:0; flex:1 1 auto; overflow-wrap:anywhere; word-break:break-word; }
+.accordion-icon, .sub-accordion-icon, a.flex > span:last-child { flex:0 0 auto; }
+
+.mxgraph { max-width: 100% !important; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+.mxgraph svg, .mxgraph img, .mxgraph canvas, .mxgraph > div, .mxgraph > svg { max-width: 100% !important; height: auto !important; }
+
+/* Page container */
+.page-wrap { max-width: 72rem; margin: 0 auto; padding: 1.25rem 1rem 2rem; }
+@media (min-width: 640px) { .page-wrap { padding: 2rem 1.5rem 2.5rem; } }
+@media (min-width: 1024px) { .page-wrap { padding: 2.25rem 2rem 3rem; } }
+
+#backToTop{
+  position: fixed; right: 14px; bottom: 14px; z-index: 50;
+  padding: .65rem .75rem;
+  border-radius: 999px;
+  border: 1px solid rgba(226, 232, 240, 1);
+  background: rgba(255, 255, 255, .92);
+  box-shadow: 0 10px 30px rgba(15,23,42,.12);
+  color: #0f172a; font-weight: 700;
+}
+#backToTop:hover{ transform: translateY(-1px); }
+.hidden{ display:none !important; }
+
 </style>
-<title>採購流程圖｜數位發展部採購專區</title>
 </head>
 <body>
 
@@ -346,13 +194,10 @@ a { text-decoration-thickness: 2px; text-underline-offset: 3px; }
   </div>
 </header>
 
-<div class="proc-wrap">
-  <div class="proc-container">
-    <div class="proc-badge">數位發展部・採購專區</div>
-    <h1 class="proc-title text-2xl sm:text-3xl">採購流程圖</h1>
-    <p class="proc-subtitle text-sm sm:text-base">使用上方選單切換頁面；本頁內容已針對手機/平板/電腦自適應排版。</p>
-    <main class="mt-6">
-      
+<div class="page-wrap">
+<div class="text-center mb-12">
+<h3 class="text-2xl font-bold text-slate-900">採購流程圖</h3>
+</div>
 <div class="space-y-4">
 <!-- 準用最有利標 -->
 <div class="bg-white rounded-xl shadow-md overflow-hidden">
@@ -391,12 +236,8 @@ a { text-decoration-thickness: 2px; text-underline-offset: 3px; }
 </div>
 </div>
 </div>
-
-    </main>
-  </div>
-
-  <button id="backToTop" class="hidden" type="button" aria-label="回到頁首">↑ 回到頁首</button>
 </div>
+<button id="backToTop" class="hidden" type="button" aria-label="回到頁首">↑ 回到頁首</button>
 
 <script>
 (function(){
@@ -410,54 +251,24 @@ a { text-decoration-thickness: 2px; text-underline-offset: 3px; }
     toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
   };
 
-  toggle.addEventListener('click', () => {
-    const open = header.classList.contains('nav-open');
-    setOpen(!open);
-  });
+  toggle.addEventListener('click', () => setOpen(!header.classList.contains('nav-open')));
+  nav.addEventListener('click', (e) => { if (e.target.closest('a')) setOpen(false); });
 
-  // close after clicking a link (mobile)
-  nav.addEventListener('click', (e) => {
-    const a = e.target.closest('a');
-    if (!a) return;
-    setOpen(false);
-  });
-
-  // highlight current page
   const current = (location.pathname.split('/').pop() || 'index.html').toLowerCase();
   nav.querySelectorAll('a.nav-link').forEach(a => {
     const href = (a.getAttribute('href') || '').toLowerCase();
-    if (href === current || (current === 'index.html' && href === 'docs.html')) {
-      a.classList.add('is-active');
-    }
+    if (href === current || (current === 'index.html' && href === 'docs.html')) a.classList.add('is-active');
   });
 })();
 </script>
 
-<script>
-/* ===== Procurement Portal UI (Google Sites friendly) ===== */
-(function () {
-  const patchMxgraphNodes = () => {
-    const nodes = document.querySelectorAll(".mxgraph[data-mxgraph]");
-    nodes.forEach((node) => {
-      const raw = node.getAttribute("data-mxgraph");
-      if (!raw) return;
-      try { JSON.parse(raw); } catch (e) {
-        const fixed = raw
-          .replace(/("#0000ff")("nav")/g, '$1,$2')
-          .replace(/("false")("toolbar")/g, '$1,$2')
-          .replace(/("lightbox")("edit")/g, '$1,$2')
-          .replace(/("_blank")("xml")/g, '$1,$2');
-        node.setAttribute("data-mxgraph", fixed);
-      }
-    });
-  };
 
-  // Robust accordion: avoid "被下面卡片蓋住" by keeping opened containers' max-height large enough.
+<script>
+/* ===== MODA Procurement Site JS (GitHub Pages) ===== */
+(function () {
   const openContent = (content) => {
     if (!content) return;
-    // 1) animate to the real height
     content.style.maxHeight = content.scrollHeight + "px";
-    // 2) after animation, unlock to a very large value so nested items won't clip
     window.clearTimeout(content.__unlockTimer);
     content.__unlockTimer = window.setTimeout(() => {
       if (content.style.maxHeight !== "0px") content.style.maxHeight = "9999px";
@@ -467,19 +278,16 @@ a { text-decoration-thickness: 2px; text-underline-offset: 3px; }
   const closeContent = (content) => {
     if (!content) return;
     window.clearTimeout(content.__unlockTimer);
-    // If it was "unlocked" (9999px), set back to current height first to animate smoothly
     content.style.maxHeight = content.scrollHeight + "px";
-    requestAnimationFrame(() => {
-      content.style.maxHeight = "0px";
-    });
+    requestAnimationFrame(() => { content.style.maxHeight = "0px"; });
   };
 
-  const collapseAll = () => {
-    document.querySelectorAll(".accordion-content, .sub-accordion-content").forEach((c) => {
+  const collapseAllAccordions = (root=document) => {
+    root.querySelectorAll(".accordion-content, .sub-accordion-content").forEach((c) => {
       window.clearTimeout(c.__unlockTimer);
       c.style.maxHeight = "0px";
     });
-    document.querySelectorAll(".accordion-header.active, .sub-accordion-header.active").forEach((h) => {
+    root.querySelectorAll(".accordion-header.active, .sub-accordion-header.active").forEach((h) => {
       h.classList.remove("active");
     });
   };
@@ -490,21 +298,119 @@ a { text-decoration-thickness: 2px; text-underline-offset: 3px; }
       if (!header) return;
 
       const content = header.nextElementSibling;
-      const isOpening = !header.classList.contains("active");
-
+      const opening = !header.classList.contains("active");
       header.classList.toggle("active");
-
-      if (isOpening) openContent(content);
+      if (opening) openContent(content);
       else closeContent(content);
     });
 
-    // On resize/orientation change, keep opened content visible
-    window.addEventListener("resize", () => {
-      document.querySelectorAll(".accordion-header.active, .sub-accordion-header.active").forEach((h) => {
-        const c = h.nextElementSibling;
-        if (c) c.style.maxHeight = "9999px";
+    // initial collapse (stable)
+    collapseAllAccordions();
+  };
+
+  // Highlight helpers
+  const removeHighlights = (container) => {
+    if (!container) return;
+    const highlights = container.querySelectorAll("span.search-highlight");
+    highlights.forEach((node) => {
+      const parent = node.parentNode;
+      if (!parent) return;
+      parent.replaceChild(document.createTextNode(node.textContent), node);
+      parent.normalize();
+    });
+  };
+
+  const applyHighlights = (container, term) => {
+    if (!container || !term) return;
+    const escaped = term.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    const regex = new RegExp("(" + escaped + ")", "gi");
+    const targets = container.querySelectorAll(".text-lg, .font-semibold, .font-medium, a > span:first-child");
+
+    targets.forEach((el) => {
+      const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
+      const textNodes = [];
+      let n;
+      while ((n = walker.nextNode())) textNodes.push(n);
+
+      textNodes.forEach((node) => {
+        const text = node.nodeValue;
+        if (!text || !regex.test(text)) return;
+
+        const fragment = document.createDocumentFragment();
+        const parts = text.split(regex);
+        for (let i = 0; i < parts.length; i++) {
+          if (i % 2 === 0) {
+            if (parts[i]) fragment.appendChild(document.createTextNode(parts[i]));
+          } else {
+            const span = document.createElement("span");
+            span.className = "search-highlight";
+            span.style.color = "#D32F2F";
+            span.style.fontWeight = "bold";
+            span.textContent = parts[i];
+            fragment.appendChild(span);
+          }
+        }
+        node.parentNode.replaceChild(fragment, node);
       });
-    }, { passive: true });
+    });
+  };
+
+  const initLawSearch = () => {
+    const input = document.getElementById("lawSearchInput");
+    const list = document.getElementById("lawList");
+    if (!input || !list) return;
+
+    const items = Array.from(list.querySelectorAll(".law-item"));
+    if (!items.length) return;
+
+    input.addEventListener("input", function () {
+      const term = this.value.trim();
+      const termLower = term.toLowerCase();
+
+      removeHighlights(list);
+      items.forEach((item) => {
+        item.style.display = "";
+        collapseAllAccordions(item);
+      });
+
+      if (!term) return;
+
+      let firstMatch = null;
+
+      items.forEach((item) => {
+        const text = item.textContent.toLowerCase();
+        const match = text.includes(termLower);
+        if (!match) {
+          item.style.display = "none";
+          return;
+        }
+
+        if (!firstMatch) firstMatch = item;
+
+        applyHighlights(item, term);
+
+        const mainHeader = item.querySelector(".accordion-header");
+        const mainContent = item.querySelector(".accordion-content");
+        if (mainHeader && mainContent) {
+          mainHeader.classList.add("active");
+          openContent(mainContent);
+
+          const subHeaders = mainContent.querySelectorAll(".sub-accordion-header");
+          subHeaders.forEach((subHeader) => {
+            const subContent = subHeader.nextElementSibling;
+            const subText = (subHeader.textContent + (subContent ? subContent.textContent : "")).toLowerCase();
+            if (subText.includes(termLower)) {
+              subHeader.classList.add("active");
+              openContent(subContent);
+            }
+          });
+        }
+      });
+
+      if (firstMatch) {
+        firstMatch.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    });
   };
 
   const initBackToTop = () => {
@@ -520,12 +426,12 @@ a { text-decoration-thickness: 2px; text-underline-offset: 3px; }
   };
 
   document.addEventListener("DOMContentLoaded", () => {
-    patchMxgraphNodes();
-    collapseAll();
     initAccordions();
+    initLawSearch();
     initBackToTop();
   });
 })();
 </script>
+
 </body>
 </html>
