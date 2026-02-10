@@ -121,16 +121,13 @@ body { font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
 }
 /* === End Top Navigation === */
 
-/* === Responsive fix for long text + diagrams === */
+/* === Responsive fix for long text === */
 #app, main, section, nav, .accordion-content, .sub-accordion-content { min-width: 0; }
 .accordion-header, .sub-accordion-header, a.flex { min-width:0; gap:.5rem; }
 .accordion-header > span:first-child,
 .sub-accordion-header > span:first-child,
 a.flex > span:first-child { min-width:0; flex:1 1 auto; overflow-wrap:anywhere; word-break:break-word; }
 .accordion-icon, .sub-accordion-icon, a.flex > span:last-child { flex:0 0 auto; }
-
-.mxgraph { max-width: 100% !important; overflow-x: auto; -webkit-overflow-scrolling: touch; }
-.mxgraph svg, .mxgraph img, .mxgraph canvas, .mxgraph > div, .mxgraph > svg { max-width: 100% !important; height: auto !important; }
 
 /* Page container */
 .page-wrap { max-width: 72rem; margin: 0 auto; padding: 1.25rem 1rem 2rem; }
@@ -148,6 +145,11 @@ a.flex > span:first-child { min-width:0; flex:1 1 auto; overflow-wrap:anywhere; 
 }
 #backToTop:hover{ transform: translateY(-1px); }
 .hidden{ display:none !important; }
+
+/* Flowchart SVG presentation */
+.flowchart-wrap{ border: 1px solid rgba(226,232,240,1); background: rgba(248,250,252,1); border-radius: 14px; padding: 12px; overflow-x:auto; -webkit-overflow-scrolling:touch; }
+.flowchart-wrap img{ display:block; width:100%; height:auto; min-width: 980px; }
+.flowchart-tip{ margin-top: .75rem; font-size: .75rem; color: #64748b; }
 
 </style>
 </head>
@@ -257,11 +259,10 @@ a.flex > span:first-child { min-width:0; flex:1 1 auto; overflow-wrap:anywhere; 
       else closeContent(content);
     });
 
-    // initial collapse (stable)
     collapseAllAccordions();
   };
 
-  // Highlight helpers
+  // Search + highlight for laws page
   const removeHighlights = (container) => {
     if (!container) return;
     const highlights = container.querySelectorAll("span.search-highlight");
@@ -278,17 +279,15 @@ a.flex > span:first-child { min-width:0; flex:1 1 auto; overflow-wrap:anywhere; 
     const escaped = term.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
     const regex = new RegExp("(" + escaped + ")", "gi");
     const targets = container.querySelectorAll(".text-lg, .font-semibold, .font-medium, a > span:first-child");
-
     targets.forEach((el) => {
       const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
-      const textNodes = [];
+      const nodes = [];
       let n;
-      while ((n = walker.nextNode())) textNodes.push(n);
+      while ((n = walker.nextNode())) nodes.push(n);
 
-      textNodes.forEach((node) => {
+      nodes.forEach((node) => {
         const text = node.nodeValue;
         if (!text || !regex.test(text)) return;
-
         const fragment = document.createDocumentFragment();
         const parts = text.split(regex);
         for (let i = 0; i < parts.length; i++) {
@@ -321,10 +320,7 @@ a.flex > span:first-child { min-width:0; flex:1 1 auto; overflow-wrap:anywhere; 
       const termLower = term.toLowerCase();
 
       removeHighlights(list);
-      items.forEach((item) => {
-        item.style.display = "";
-        collapseAllAccordions(item);
-      });
+      items.forEach((item) => { item.style.display = ""; collapseAllAccordions(item); });
 
       if (!term) return;
 
@@ -333,13 +329,9 @@ a.flex > span:first-child { min-width:0; flex:1 1 auto; overflow-wrap:anywhere; 
       items.forEach((item) => {
         const text = item.textContent.toLowerCase();
         const match = text.includes(termLower);
-        if (!match) {
-          item.style.display = "none";
-          return;
-        }
+        if (!match) { item.style.display = "none"; return; }
 
         if (!firstMatch) firstMatch = item;
-
         applyHighlights(item, term);
 
         const mainHeader = item.querySelector(".accordion-header");
@@ -352,17 +344,12 @@ a.flex > span:first-child { min-width:0; flex:1 1 auto; overflow-wrap:anywhere; 
           subHeaders.forEach((subHeader) => {
             const subContent = subHeader.nextElementSibling;
             const subText = (subHeader.textContent + (subContent ? subContent.textContent : "")).toLowerCase();
-            if (subText.includes(termLower)) {
-              subHeader.classList.add("active");
-              openContent(subContent);
-            }
+            if (subText.includes(termLower)) { subHeader.classList.add("active"); openContent(subContent); }
           });
         }
       });
 
-      if (firstMatch) {
-        firstMatch.scrollIntoView({ behavior: "smooth", block: "start" });
-      }
+      if (firstMatch) firstMatch.scrollIntoView({ behavior: "smooth", block: "start" });
     });
   };
 
