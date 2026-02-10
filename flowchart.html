@@ -150,6 +150,12 @@ a.flex > span:first-child { min-width:0; flex:1 1 auto; overflow-wrap:anywhere; 
 .flowchart-wrap{ border: 1px solid rgba(226,232,240,1); background: rgba(248,250,252,1); border-radius: 14px; padding: 12px; overflow-x:auto; -webkit-overflow-scrolling:touch; }
 .flowchart-wrap img{ display:block; width:100%; height:auto; min-width: 980px; }
 .flowchart-tip{ margin-top: .75rem; font-size: .75rem; color: #64748b; }
+.flowchart-error{
+  margin-top:.75rem; padding:.75rem 1rem;
+  border:1px solid rgba(248,113,113,.45);
+  background: rgba(254,242,242,.9);
+  color:#991b1b; border-radius: 12px; font-size:.875rem;
+}
 
 </style>
 </head>
@@ -249,16 +255,47 @@ a.flex > span:first-child { min-width:0; flex:1 1 auto; overflow-wrap:anywhere; 
 (function () {
   const openContent = (content) => {
     if (!content) return;
-    content.style.maxHeight = content.scrollHeight + "px";
+
+    // 先給一個足夠大的 maxHeight，避免 scrollHeight=0 時「看起來沒展開」
+    content.style.maxHeight = "9999px";
+
+    // 下一幀再以實際高度收斂（可保留動畫）
+    requestAnimationFrame(() => {
+      const h = content.scrollHeight;
+      if (h > 0) content.style.maxHeight = h + "px";
+    });
+
+    // 圖片載入後再重新計算高度，避免被裁切或看不到
+    content.querySelectorAll("img").forEach((img) => {
+      if (img.complete) return;
+
+      img.addEventListener("load", () => {
+        if (content.style.maxHeight !== "0px") content.style.maxHeight = content.scrollHeight + "px";
+      }, { once: true });
+
+      img.addEventListener("error", () => {
+        // 若 SVG/圖片路徑不存在，顯示提示
+        const wrap = img.closest(".flowchart-wrap");
+        if (wrap && !wrap.querySelector(".flowchart-error")) {
+          const div = document.createElement("div");
+          div.className = "flowchart-error";
+          div.innerHTML = "找不到流程圖 SVG 檔案。請確認 GitHub Repo 根目錄有上傳 <b>assets/</b> 資料夾（含 SVG 檔），並且路徑大小寫正確。";
+          wrap.appendChild(div);
+        }
+        if (content.style.maxHeight !== "0px") content.style.maxHeight = content.scrollHeight + "px";
+      }, { once: true });
+    });
+
     window.clearTimeout(content.__unlockTimer);
     content.__unlockTimer = window.setTimeout(() => {
       if (content.style.maxHeight !== "0px") content.style.maxHeight = "9999px";
-    }, 460);
+    }, 520);
   };
 
   const closeContent = (content) => {
     if (!content) return;
     window.clearTimeout(content.__unlockTimer);
+    // 先固定當前高度，再縮回 0，才會有動畫
     content.style.maxHeight = content.scrollHeight + "px";
     requestAnimationFrame(() => { content.style.maxHeight = "0px"; });
   };
