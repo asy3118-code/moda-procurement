@@ -183,6 +183,42 @@ a.flex > span:first-child { min-width:0; flex:1 1 auto; overflow-wrap:anywhere; 
   color:#991b1b; border-radius: 12px; font-size:.875rem;
 }
 
+
+/* === MODA card hover accent (match homepage yellow highlight) === */
+.page-wrap .space-y-4 > .bg-white.rounded-xl.shadow-md{
+  position: relative;
+  transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease, background .18s ease;
+  border: 1px solid rgba(220, 227, 234, 1);
+}
+.page-wrap .space-y-4 > .bg-white.rounded-xl.shadow-md::after{
+  content: "";
+  position: absolute;
+  left: 0; top: 0;
+  width: 4px; height: 100%;
+  background: linear-gradient(180deg, var(--moda-yellow), #fde68a);
+  opacity: 0;
+  transition: opacity .18s ease;
+  pointer-events: none;
+  z-index: 2;
+}
+.page-wrap .space-y-4 > .bg-white.rounded-xl.shadow-md:hover{
+  transform: translateY(-2px);
+  box-shadow: 0 14px 28px rgba(15, 23, 42, .08);
+  border-color: #CBD5E1;
+}
+.page-wrap .space-y-4 > .bg-white.rounded-xl.shadow-md:hover::after{
+  opacity: 1;
+}
+/* keep reduced motion users comfortable */
+@media (prefers-reduced-motion: reduce){
+  .page-wrap .space-y-4 > .bg-white.rounded-xl.shadow-md{
+    transition: none;
+  }
+  .page-wrap .space-y-4 > .bg-white.rounded-xl.shadow-md::after{
+    transition: none;
+  }
+}
+
 </style>
 
 <!-- MODA unified theme overrides -->
