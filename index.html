@@ -214,15 +214,429 @@
       .hero-chip{font-size:13px}
     }
   </style>
+
+<!-- MODA unified theme overrides -->
+<style id="moda-unified-theme-overrides">
+  :root{
+    --moda-yellow:#F4EA5A;
+    --moda-gray:#7B868C;
+    --moda-ink:#0F172A;
+    --moda-muted:#5D6C80;
+    --moda-line:#DDE5EF;
+    --moda-bg:#F5F7FB;
+    --moda-card:#FFFFFF;
+    --moda-shadow:0 10px 26px rgba(15,23,42,.06);
+    --moda-shadow-hover:0 16px 34px rgba(15,23,42,.10);
+  }
+
+  html, body{
+    margin:0;
+    padding:0;
+    background:var(--moda-bg);
+    color:var(--moda-ink);
+    overflow-x:hidden;
+    font-family: "Noto Sans TC", "Microsoft JhengHei", "PingFang TC", system-ui, sans-serif;
+  }
+
+  body::before{
+    content:"";
+    position:fixed;
+    inset:0;
+    pointer-events:none;
+    background:
+      radial-gradient(900px 280px at 5% -10%, rgba(244,234,90,.18), transparent 60%),
+      radial-gradient(900px 280px at 95% -10%, rgba(91,107,125,.10), transparent 60%);
+    z-index:0;
+  }
+
+  .site-header{
+    position:sticky;
+    top:0;
+    z-index:100;
+    background:rgba(255,255,255,.90);
+    backdrop-filter:saturate(160%) blur(12px);
+    border-bottom:1px solid rgba(123,134,140,.20);
+    box-shadow:0 4px 18px rgba(15,23,42,.03);
+  }
+
+  .site-header-inner,
+  .header-wrap{
+    max-width:72rem;
+    margin:0 auto;
+    padding:.82rem 1rem;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:.9rem;
+    position:relative;
+  }
+
+  .site-brand,
+  .brand{
+    display:flex;
+    align-items:center;
+    gap:.6rem;
+    text-decoration:none;
+    color:var(--moda-ink);
+    min-width:0;
+    flex:0 1 auto;
+  }
+
+  .site-brand:hover,
+  .brand:hover{
+    opacity:.95;
+  }
+
+  .brand-logo{
+    height:28px !important;
+    width:auto !important;
+    display:block;
+    flex:0 0 auto;
+  }
+
+  .brand-text{
+    font-size:1.05rem !important;
+    font-weight:700 !important;
+    letter-spacing:.01em;
+    color:var(--moda-ink);
+    white-space:nowrap;
+    line-height:1.2;
+  }
+
+  .spacer{ display:none !important; }
+
+  .nav-toggle{
+    display:none;
+    align-items:center;
+    justify-content:center;
+    width:40px;
+    height:40px;
+    border-radius:10px;
+    border:1px solid rgba(123,134,140,.25);
+    background:#fff;
+    color:#334155;
+    cursor:pointer;
+    transition:all .2s ease;
+    flex:0 0 auto;
+  }
+  .nav-toggle:hover{
+    border-color:rgba(123,134,140,.45);
+    box-shadow:0 8px 18px rgba(15,23,42,.08);
+    transform:translateY(-1px);
+  }
+  .nav-toggle svg,.nav-icon{
+    width:20px;
+    height:20px;
+    display:block;
+  }
+
+  .site-nav{
+    display:flex;
+    align-items:center;
+    gap:.18rem;
+    margin-left:auto;
+    flex-wrap:nowrap;
+  }
+
+  .site-nav .nav-link{
+    position:relative;
+    text-decoration:none;
+    color:#334155;
+    font-size:.95rem !important;
+    font-weight:600 !important;
+    letter-spacing:.01em;
+    line-height:1.2;
+    padding:.58rem .82rem !important;
+    border-radius:999px;
+    transition:all .2s ease;
+    white-space:nowrap;
+  }
+
+  .site-nav .nav-link:hover{
+    color:var(--moda-ink);
+    background:rgba(123,134,140,.10);
+    transform:translateY(-1px);
+  }
+
+  .site-nav .nav-link.is-active,
+  .site-nav .nav-link.active,
+  .site-nav .nav-link[aria-current="page"]{
+    color:#1d4ed8;
+    background:rgba(29,78,216,.10);
+    box-shadow:inset 0 0 0 1px rgba(29,78,216,.12);
+  }
+
+  .page-wrap, main.page-wrap{
+    position:relative;
+    z-index:1;
+    max-width:72rem !important;
+    margin:0 auto !important;
+    padding:1.2rem 1rem 2.6rem !important;
+    box-sizing:border-box;
+  }
+
+  /* Home hero / cards */
+  .hero-card{
+    border:1px solid rgba(123,134,140,.20) !important;
+    border-radius:22px !important;
+    background:linear-gradient(180deg, rgba(255,255,255,.96), rgba(255,255,255,.92)) !important;
+    box-shadow:var(--moda-shadow) !important;
+    overflow:hidden;
+    position:relative;
+  }
+
+  .hero-card::before{
+    content:"";
+    display:block;
+    height:6px;
+    background:linear-gradient(90deg, rgba(244,234,90,.95), rgba(125,140,152,.15), rgba(29,78,216,.18));
+  }
+
+  .hero-card .hero-title{
+    text-align:center;
+    color:#0B1F44 !important;
+    letter-spacing:.01em;
+  }
+
+  .hero-card .hero-sub{
+    color:var(--moda-muted) !important;
+    text-align:center;
+    max-width:860px;
+    margin-left:auto;
+    margin-right:auto;
+  }
+
+  .cards-grid{
+    align-items:stretch;
+  }
+
+  .card-link{
+    background:var(--moda-card) !important;
+    border:1px solid rgba(123,134,140,.20) !important;
+    border-radius:18px !important;
+    box-shadow:0 8px 22px rgba(15,23,42,.05);
+    transition:transform .22s ease, box-shadow .22s ease, border-color .22s ease;
+  }
+
+  .card-link:hover{
+    transform:translateY(-3px);
+    box-shadow:var(--moda-shadow-hover);
+    border-color:rgba(29,78,216,.18) !important;
+  }
+
+  .card-link:focus-visible{
+    outline:3px solid rgba(29,78,216,.18);
+    outline-offset:2px;
+  }
+
+  .icon-wrap{
+    border:1px solid rgba(123,134,140,.20);
+    background:
+      radial-gradient(circle at 25% 20%, rgba(244,234,90,.28), transparent 60%),
+      #fff !important;
+    box-shadow:0 6px 14px rgba(15,23,42,.05);
+  }
+
+  .card-title{ color:#0B1F44 !important; }
+  .card-sub{ color:var(--moda-muted) !important; }
+
+  /* Inner pages: title blocks / cards / accordions */
+  .page-wrap > .text-center h3,
+  .page-wrap h3.text-2xl,
+  .page-wrap h3.text-3xl{
+    color:#0B1F44 !important;
+    letter-spacing:.01em;
+  }
+
+  .page-wrap .bg-white.rounded-xl.shadow-md,
+  .page-wrap .bg-white.rounded-2xl.shadow-md,
+  .page-wrap .bg-slate-100.rounded-2xl,
+  .page-wrap .bg-white.rounded-xl,
+  .page-wrap .bg-white.rounded-2xl{
+    border:1px solid rgba(123,134,140,.18) !important;
+    border-radius:18px !important;
+    box-shadow:var(--moda-shadow) !important;
+    background:#fff !important;
+  }
+
+  .page-wrap .bg-white.rounded-xl.shadow-md:hover{
+    box-shadow:var(--moda-shadow-hover) !important;
+  }
+
+  .accordion-header,
+  .sub-accordion-header{
+    transition:background-color .18s ease;
+  }
+
+  .accordion-header:hover,
+  .sub-accordion-header:hover{
+    background:rgba(123,134,140,.06);
+  }
+
+  .accordion-header:focus-visible,
+  .sub-accordion-header:focus-visible{
+    outline:3px solid rgba(29,78,216,.16);
+    outline-offset:-2px;
+  }
+
+  .accordion-icon,
+  .sub-accordion-icon{
+    color:#64748B !important;
+    transition:transform .22s ease, color .2s ease;
+  }
+
+  .accordion-header.active .accordion-icon,
+  .sub-accordion-header.active .sub-accordion-icon{
+    color:#1d4ed8 !important;
+  }
+
+  .accordion-content,
+  .sub-accordion-content{
+    transition:max-height .30s ease;
+  }
+
+  .page-wrap .border-slate-200{
+    border-color:#E2E8F0 !important;
+  }
+
+  .page-wrap a[href]:not(.nav-link):not(.site-brand):not(.brand){
+    transition:all .18s ease;
+  }
+
+  .page-wrap a[href]:not(.nav-link):not(.site-brand):not(.brand):hover{
+    text-decoration:none;
+    filter:saturate(1.05);
+  }
+
+  /* Search highlight on laws page */
+  .search-highlight{
+    color:#B91C1C !important;
+    font-weight:700;
+    background:rgba(244,234,90,.45);
+    border-radius:4px;
+    padding:0 .05em;
+  }
+
+  /* Flowchart page wrappers */
+  .flowchart-wrap{
+    border:1px solid rgba(123,134,140,.18) !important;
+    border-radius:14px !important;
+    background:
+      linear-gradient(180deg, rgba(248,250,252,.98), rgba(255,255,255,.98)) !important;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.8);
+  }
+
+  .flowchart-wrap img{
+    display:block;
+    max-width:none;
+  }
+
+  .flowchart-tip{
+    color:var(--moda-muted) !important;
+  }
+
+  /* Buttons (QA page CTA and similar links) */
+  .page-wrap a.inline-flex{
+    transition:transform .2s ease, box-shadow .2s ease, filter .2s ease;
+    box-shadow:0 10px 22px rgba(29,78,216,.12);
+  }
+  .page-wrap a.inline-flex:hover{
+    transform:translateY(-2px);
+    box-shadow:0 14px 28px rgba(29,78,216,.16);
+  }
+
+  /* Mobile */
+  @media (max-width: 900px){
+    .site-header-inner,
+    .header-wrap{
+      padding:.7rem .9rem;
+      gap:.55rem;
+    }
+
+    .brand-text{ font-size:1rem !important; }
+
+    .nav-toggle{ display:inline-flex; }
+
+    .site-nav{
+      position:absolute;
+      top:calc(100% + .38rem);
+      left:.8rem;
+      right:.8rem;
+      display:grid;
+      grid-template-columns:1fr;
+      gap:.25rem;
+      margin-left:0;
+      padding:.45rem;
+      border:1px solid rgba(123,134,140,.20);
+      border-radius:14px;
+      background:rgba(255,255,255,.98);
+      box-shadow:0 18px 38px rgba(15,23,42,.14);
+      opacity:0;
+      transform:translateY(-8px);
+      pointer-events:none;
+      transition:opacity .18s ease, transform .18s ease;
+    }
+
+    .site-header.nav-open .site-nav{
+      opacity:1;
+      transform:translateY(0);
+      pointer-events:auto;
+    }
+
+    .site-nav .nav-link{
+      padding:.7rem .8rem !important;
+      border-radius:10px;
+      font-size:.95rem !important;
+    }
+
+    .page-wrap, main.page-wrap{
+      padding:.95rem .75rem 2rem !important;
+    }
+
+    .hero-card{
+      border-radius:16px !important;
+    }
+
+    .hero-card .hero-title{
+      font-size:2rem !important;
+      line-height:1.2;
+    }
+
+    .hero-card .hero-sub{
+      font-size:1.05rem !important;
+      line-height:1.75;
+    }
+
+    .card-link{
+      border-radius:14px !important;
+    }
+  }
+
+  @media (max-width: 640px){
+    .brand-logo{ height:24px !important; }
+    .brand-text{
+      font-size:.95rem !important;
+      max-width:6.5em;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+    .page-wrap > .text-center{ margin-bottom:1rem !important; }
+    .page-wrap > .text-center h3{
+      font-size:1.7rem !important;
+      line-height:1.2;
+    }
+  }
+</style>
+
 </head>
 <body>
   <header class="site-header" id="siteHeader">
-    <div class="header-wrap">
-      <a class="brand" href="index.html" aria-label="回首頁">
+    <div class="site-header-inner">
+      <a class="site-brand" href="index.html" aria-label="回首頁">
         <img class="brand-logo" src="moda_logo.png" alt="數位發展部 Logo" onerror="this.style.display='none'">
         <span class="brand-text">採購專區</span>
       </a>
-      <div class="spacer"></div>
+      
       <button class="nav-toggle" id="navToggle" aria-label="開啟選單" aria-expanded="false" aria-controls="siteNav">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
           <path d="M4 7h16M4 12h16M4 17h16"></path>
