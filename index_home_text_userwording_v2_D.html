@@ -1,0 +1,455 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+<title>首頁｜數位發展部採購專區</title>
+<script src="https://cdn.tailwindcss.com"></script>
+
+<script>
+tailwind.config = {
+  theme: { extend: { colors: { moda: { yellow: '#F4EA5A', gray: '#7B868C', ink: '#0f172a' } } } }
+}
+</script>
+<style>
+
+        body {
+            font-family: 'Inter', 'Noto Sans TC', sans-serif;
+        }
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease-in-out;
+        }
+        .sub-accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-in-out;
+        }
+        .accordion-header.active .accordion-icon, .sub-accordion-header.active .sub-accordion-icon {
+            transform: rotate(180deg);
+        }
+        .tab-link.active {
+            border-bottom-color: var(--moda-yellow);
+            color: var(--moda-ink);
+        }
+    
+
+/* === Top Navigation (GitHub Pages) === */
+:root{
+  /* MODA brand colours */
+  --moda-yellow:#F4EA5A; /* Pantone 101 / RGB 244,234,90 */
+  --moda-gray:#7B868C;   /* Pantone 430 / RGB 123,134,140 */
+  --moda-ink:#0f172a;
+  --moda-bg:#f8fafc;
+  --moda-border: rgba(226,232,240,1);
+}
+
+html, body { margin: 0; padding: 0; background: var(--moda-bg); overflow-x: hidden; }
+body {
+  font-family: "Poppins", "PingFang TC", "PingFang SC", "Noto Sans TC", "Microsoft JhengHei",
+               system-ui, -apple-system, "Segoe UI", Roboto, Arial;
+}
+
+.site-header{
+  position: sticky; top: 0; z-index: 60;
+  background: rgba(255,255,255,.92);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(226,232,240,.95);
+}
+.site-header::before{
+  content: "";
+  position: absolute; left: 0; right: 0; top: 0;
+  height: 3px;
+  background: var(--moda-yellow);
+}
+
+.site-header-inner{
+  max-width: 72rem; margin: 0 auto;
+  padding: .85rem 1rem;
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 1rem;
+}
+
+.site-brand{
+  display: flex; align-items: center; gap: .65rem;
+  text-decoration: none;
+  color: var(--moda-ink);
+  padding: .25rem .35rem; /* keep clear space around logo */
+  border-radius: 14px;
+}
+.site-brand:hover{ background: rgba(244,234,90,.14); }
+
+.brand-logo{ height: 28px; width: auto; display: block; }
+.brand-text{ font-weight: 800; letter-spacing: .01em; font-size: 1.05rem; }
+
+.site-nav{ display: flex; align-items: center; gap: .35rem; flex-wrap: wrap; }
+
+.nav-link{
+  padding: .55rem .8rem;
+  border-radius: 999px;
+  color: #334155;
+  font-weight: 800;
+  font-size: .95rem;
+  text-decoration: none;
+  transition: background .15s ease, color .15s ease, box-shadow .15s ease;
+}
+.nav-link:hover{
+  background: rgba(244,234,90,.18);
+  color: var(--moda-ink);
+}
+.nav-link.is-active{
+  background: rgba(244,234,90,.40);
+  color: var(--moda-ink);
+  box-shadow: inset 0 0 0 1px rgba(244,234,90,.65);
+}
+
+.nav-toggle{
+  display: none;
+  align-items: center; justify-content: center;
+  width: 40px; height: 40px;
+  border-radius: 14px;
+  background: rgba(244,234,90,.18);
+  border: 1px solid rgba(244,234,90,.45);
+  cursor: pointer;
+}
+.nav-toggle:hover{ background: rgba(244,234,90,.28); }
+
+.nav-icon{ width: 18px; height: 18px; fill: #0f172a; }
+
+/* Mobile nav */
+@media (max-width: 900px) {
+  .nav-toggle{ display: inline-flex; }
+  .site-nav{
+    display: none;
+    position: absolute;
+    left: 0; right: 0;
+    top: calc(100% + 1px);
+    padding: .75rem 1rem 1rem;
+    background: rgba(255,255,255,.98);
+    border-bottom: 1px solid rgba(226,232,240,.95);
+    box-shadow: 0 18px 40px rgba(15,23,42,.12);
+    flex-direction: column;
+    align-items: stretch;
+    gap: .25rem;
+  }
+  .nav-open .site-nav{ display: flex; }
+  .nav-link{ border-radius: 14px; }
+  .brand-logo{ height: 22px; }
+  .brand-text{ font-size: 1rem; }
+}
+/* === End Top Navigation === */
+
+
+/* === Responsive fix for long text === */
+#app, main, section, nav, .accordion-content, .sub-accordion-content { min-width: 0; }
+.accordion-header, .sub-accordion-header, a.flex { min-width:0; gap:.5rem; }
+.accordion-header > span:first-child,
+.sub-accordion-header > span:first-child,
+a.flex > span:first-child { min-width:0; flex:1 1 auto; overflow-wrap:anywhere; word-break:break-word; }
+.accordion-icon, .sub-accordion-icon, a.flex > span:last-child { flex:0 0 auto; }
+
+/* Page container */
+.page-wrap { max-width: 72rem; margin: 0 auto; padding: 1.25rem 1rem 2rem; }
+@media (min-width: 640px) { .page-wrap { padding: 2rem 1.5rem 2.5rem; } }
+@media (min-width: 1024px) { .page-wrap { padding: 2.25rem 2rem 3rem; } }
+
+#backToTop{
+  position: fixed; right: 14px; bottom: 14px; z-index: 50;
+  padding: .65rem .75rem;
+  border-radius: 999px;
+  border: 1px solid rgba(226, 232, 240, 1);
+  background: rgba(255, 255, 255, .92);
+  box-shadow: 0 10px 30px rgba(15,23,42,.12);
+  color: #0f172a; font-weight: 700;
+}
+#backToTop:hover{ transform: translateY(-1px); }
+.hidden{ display:none !important; }
+
+/* Flowchart SVG presentation */
+.flowchart-wrap{ border: 1px solid rgba(226,232,240,1); background: rgba(248,250,252,1); border-radius: 14px; padding: 12px; overflow-x:auto; -webkit-overflow-scrolling:touch; }
+.flowchart-wrap img{ display:block; width:100%; height:auto; min-width: 980px; }
+.flowchart-tip{ margin-top: .75rem; font-size: .75rem; color: #64748b; }
+.flowchart-error{
+  margin-top:.75rem; padding:.75rem 1rem;
+  border:1px solid rgba(248,113,113,.45);
+  background: rgba(254,242,242,.9);
+  color:#991b1b; border-radius: 12px; font-size:.875rem;
+}
+
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="site-header-inner">
+    <a class="site-brand" href="index.html" aria-label="回到首頁">
+          <img class="brand-logo" src="moda_logo.png" alt="數位發展部 MODA 標誌">
+          <span class="brand-text">採購專區</span>
+        </a>
+
+    <button id="navToggle" class="nav-toggle" type="button" aria-expanded="false" aria-controls="siteNav">
+      <span class="sr-only">開啟選單</span>
+      <svg xmlns="http://www.w3.org/2000/svg" class="nav-icon" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+        <path fill-rule="evenodd" d="M3 5.75A.75.75 0 013.75 5h12.5a.75.75 0 010 1.5H3.75A.75.75 0 013 5.75zm0 4.25c0-.414.336-.75.75-.75h12.5a.75.75 0 010 1.5H3.75A.75.75 0 01 3 10zm0 4.25c0-.414.336-.75.75-.75h12.5a.75.75 0 010 1.5H3.75A.75.75 0 01 3 14.25z" clip-rule="evenodd"/>
+      </svg>
+    </button>
+
+    <nav id="siteNav" class="site-nav" aria-label="主選單">
+      <a class="nav-link" href="docs.html">採購文件範本</a>
+      <a class="nav-link" href="flowchart.html">採購流程圖</a>
+      <a class="nav-link" href="laws.html">相關法令及解釋函</a>
+      <a class="nav-link" href="qa.html">智慧問答</a>
+      <a class="nav-link" href="pcc.html">工程會解釋函</a>
+    </nav>
+  </div>
+</header>
+
+<div class="page-wrap">
+
+<div class="bg-white rounded-2xl p-8 md:p-12 border border-slate-200">
+  <h1 class="text-2xl md:text-3xl font-bold text-slate-900">數位發展部・採購專區</h1>
+  <p class="mt-3 text-slate-600">本專區提供採購文件範本、流程圖、法令及函釋等資源，並設置 NotebookLM 智慧問答入口，協助同仁快速查詢與應用。</p>
+  <div class="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+    <a class="bg-slate-50 hover:bg-white rounded-2xl p-5 border border-slate-200 shadow-sm hover:shadow-md transition" href="docs.html">
+      <div class="font-bold text-slate-900">採購文件</div>
+      <div class="text-slate-500 mt-1 text-sm">包含請購、評選、契約變更至驗收等各個階段所需之文件、簽辦範例等。</div>
+    </a>
+    <a class="bg-slate-50 hover:bg-white rounded-2xl p-5 border border-slate-200 shadow-sm hover:shadow-md transition" href="flowchart.html">
+      <div class="font-bold text-slate-900">採購流程圖</div>
+      <div class="text-slate-500 mt-1 text-sm">包含準用最有利標、最有利標及參考最有利標精神之流程圖。</div>
+    </a>
+    <a class="bg-slate-50 hover:bg-white rounded-2xl p-5 border border-slate-200 shadow-sm hover:shadow-md transition" href="laws.html">
+      <div class="font-bold text-slate-900">相關法令及解釋函</div>
+      <div class="text-slate-500 mt-1 text-sm">可關鍵字搜尋，並以紅字標示結果</div>
+    </a>
+    <a class="bg-slate-50 hover:bg-white rounded-2xl p-5 border border-slate-200 shadow-sm hover:shadow-md transition" href="qa.html">
+      <div class="font-bold text-slate-900">智慧問答</div>
+      <div class="text-slate-500 mt-1 text-sm">連結至 NotebookLM（新分頁開啟）</div>
+    </a>
+    <a class="bg-slate-50 hover:bg-white rounded-2xl p-5 border border-slate-200 shadow-sm hover:shadow-md transition" href="pcc.html">
+      <div class="font-bold text-slate-900">工程會解釋函</div>
+      <div class="text-slate-500 mt-1 text-sm">連結至工程會函釋查詢</div>
+    </a>
+  </div>
+</div>
+
+</div>
+<button id="backToTop" class="hidden" type="button" aria-label="回到頁首">↑ 回到頁首</button>
+
+<script>
+(function(){
+  const header = document.querySelector('.site-header');
+  const toggle = document.getElementById('navToggle');
+  const nav = document.getElementById('siteNav');
+  if (!header || !toggle || !nav) return;
+
+  const setOpen = (open) => {
+    header.classList.toggle('nav-open', !!open);
+    toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+  };
+
+  toggle.addEventListener('click', () => setOpen(!header.classList.contains('nav-open')));
+  nav.addEventListener('click', (e) => { if (e.target.closest('a')) setOpen(false); });
+
+  const current = (location.pathname.split('/').pop() || 'index.html').toLowerCase();
+  nav.querySelectorAll('a.nav-link').forEach(a => {
+    const href = (a.getAttribute('href') || '').toLowerCase();
+    if (href === current || (current === 'index.html' && href === 'docs.html')) a.classList.add('is-active');
+  });
+})();
+</script>
+
+
+<script>
+/* ===== MODA Procurement Site JS (GitHub Pages) ===== */
+(function () {
+  const openContent = (content) => {
+    if (!content) return;
+
+    // 先給一個足夠大的 maxHeight，避免 scrollHeight=0 時「看起來沒展開」
+    content.style.maxHeight = "9999px";
+
+    // 下一幀再以實際高度收斂（可保留動畫）
+    requestAnimationFrame(() => {
+      const h = content.scrollHeight;
+      if (h > 0) content.style.maxHeight = h + "px";
+    });
+
+    // 圖片載入後再重新計算高度，避免被裁切或看不到
+    content.querySelectorAll("img").forEach((img) => {
+      if (img.complete) return;
+
+      img.addEventListener("load", () => {
+        if (content.style.maxHeight !== "0px") content.style.maxHeight = content.scrollHeight + "px";
+      }, { once: true });
+
+      img.addEventListener("error", () => {
+        // 若 SVG/圖片路徑不存在，顯示提示
+        const wrap = img.closest(".flowchart-wrap");
+        if (wrap && !wrap.querySelector(".flowchart-error")) {
+          const div = document.createElement("div");
+          div.className = "flowchart-error";
+          div.innerHTML = "找不到流程圖 SVG 檔案。請確認 GitHub Repo 根目錄有上傳 <b></b> 資料夾（含 SVG 檔），並且路徑大小寫正確。";
+          wrap.appendChild(div);
+        }
+        if (content.style.maxHeight !== "0px") content.style.maxHeight = content.scrollHeight + "px";
+      }, { once: true });
+    });
+
+    window.clearTimeout(content.__unlockTimer);
+    content.__unlockTimer = window.setTimeout(() => {
+      if (content.style.maxHeight !== "0px") content.style.maxHeight = "9999px";
+    }, 520);
+  };
+
+  const closeContent = (content) => {
+    if (!content) return;
+    window.clearTimeout(content.__unlockTimer);
+    // 先固定當前高度，再縮回 0，才會有動畫
+    content.style.maxHeight = content.scrollHeight + "px";
+    requestAnimationFrame(() => { content.style.maxHeight = "0px"; });
+  };
+
+  const collapseAllAccordions = (root=document) => {
+    root.querySelectorAll(".accordion-content, .sub-accordion-content").forEach((c) => {
+      window.clearTimeout(c.__unlockTimer);
+      c.style.maxHeight = "0px";
+    });
+    root.querySelectorAll(".accordion-header.active, .sub-accordion-header.active").forEach((h) => {
+      h.classList.remove("active");
+    });
+  };
+
+  const initAccordions = () => {
+    document.addEventListener("click", function (event) {
+      const header = event.target.closest(".accordion-header, .sub-accordion-header");
+      if (!header) return;
+
+      const content = header.nextElementSibling;
+      const opening = !header.classList.contains("active");
+      header.classList.toggle("active");
+      if (opening) openContent(content);
+      else closeContent(content);
+    });
+
+    collapseAllAccordions();
+  };
+
+  // Search + highlight for laws page
+  const removeHighlights = (container) => {
+    if (!container) return;
+    const highlights = container.querySelectorAll("span.search-highlight");
+    highlights.forEach((node) => {
+      const parent = node.parentNode;
+      if (!parent) return;
+      parent.replaceChild(document.createTextNode(node.textContent), node);
+      parent.normalize();
+    });
+  };
+
+  const applyHighlights = (container, term) => {
+    if (!container || !term) return;
+    const escaped = term.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    const regex = new RegExp("(" + escaped + ")", "gi");
+    const targets = container.querySelectorAll(".text-lg, .font-semibold, .font-medium, a > span:first-child");
+    targets.forEach((el) => {
+      const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
+      const nodes = [];
+      let n;
+      while ((n = walker.nextNode())) nodes.push(n);
+
+      nodes.forEach((node) => {
+        const text = node.nodeValue;
+        if (!text || !regex.test(text)) return;
+        const fragment = document.createDocumentFragment();
+        const parts = text.split(regex);
+        for (let i = 0; i < parts.length; i++) {
+          if (i % 2 === 0) {
+            if (parts[i]) fragment.appendChild(document.createTextNode(parts[i]));
+          } else {
+            const span = document.createElement("span");
+            span.className = "search-highlight";
+            span.style.color = "#D32F2F";
+            span.style.fontWeight = "bold";
+            span.textContent = parts[i];
+            fragment.appendChild(span);
+          }
+        }
+        node.parentNode.replaceChild(fragment, node);
+      });
+    });
+  };
+
+  const initLawSearch = () => {
+    const input = document.getElementById("lawSearchInput");
+    const list = document.getElementById("lawList");
+    if (!input || !list) return;
+
+    const items = Array.from(list.querySelectorAll(".law-item"));
+    if (!items.length) return;
+
+    input.addEventListener("input", function () {
+      const term = this.value.trim();
+      const termLower = term.toLowerCase();
+
+      removeHighlights(list);
+      items.forEach((item) => { item.style.display = ""; collapseAllAccordions(item); });
+
+      if (!term) return;
+
+      let firstMatch = null;
+
+      items.forEach((item) => {
+        const text = item.textContent.toLowerCase();
+        const match = text.includes(termLower);
+        if (!match) { item.style.display = "none"; return; }
+
+        if (!firstMatch) firstMatch = item;
+        applyHighlights(item, term);
+
+        const mainHeader = item.querySelector(".accordion-header");
+        const mainContent = item.querySelector(".accordion-content");
+        if (mainHeader && mainContent) {
+          mainHeader.classList.add("active");
+          openContent(mainContent);
+
+          const subHeaders = mainContent.querySelectorAll(".sub-accordion-header");
+          subHeaders.forEach((subHeader) => {
+            const subContent = subHeader.nextElementSibling;
+            const subText = (subHeader.textContent + (subContent ? subContent.textContent : "")).toLowerCase();
+            if (subText.includes(termLower)) { subHeader.classList.add("active"); openContent(subContent); }
+          });
+        }
+      });
+
+      if (firstMatch) firstMatch.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+  };
+
+  const initBackToTop = () => {
+    const btn = document.getElementById("backToTop");
+    if (!btn) return;
+    const onScroll = () => {
+      if (window.scrollY > 600) btn.classList.remove("hidden");
+      else btn.classList.add("hidden");
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    btn.addEventListener("click", () => window.scrollTo({ top: 0, behavior: "smooth" }));
+    onScroll();
+  };
+
+  document.addEventListener("DOMContentLoaded", () => {
+    initAccordions();
+    initLawSearch();
+    initBackToTop();
+  });
+})();
+</script>
+
+</body>
+</html>
