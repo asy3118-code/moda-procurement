@@ -39,11 +39,7 @@
     .brand{
       display:flex; align-items:center; gap:10px; min-width:0; text-decoration:none; color:inherit;
     }
-    .brand-logo{
-      width:34px; height:34px; object-fit:contain; flex:0 0 auto;
-      border-radius:10px; background:#fff;
-      box-shadow: 0 1px 2px rgba(15,23,42,.06);
-    }
+    .brand-logo{height:28px; width:auto; display:block; flex:0 0 auto;}
     .brand-text{font-weight:700; color:#0F172A; letter-spacing:.2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
     .brand-dot{
       width:12px; height:12px; border-radius:999px; background:var(--blue);
@@ -91,7 +87,7 @@
       background: linear-gradient(90deg, var(--moda-yellow), #fff3a6, #dbeafe);
     }
     .hero-top{
-      display:flex; justify-content:center; margin-top:0; margin-bottom:0;
+      display:flex; justify-content:center; margin-top:6px; margin-bottom:10px;
     }
     .hero-chip{
       display:inline-flex; align-items:center; gap:8px;
@@ -223,7 +219,7 @@
   <header class="site-header" id="siteHeader">
     <div class="header-wrap">
       <a class="brand" href="index.html" aria-label="回首頁">
-        <span class="brand-dot" aria-hidden="true"></span>
+        <img class="brand-logo" src="moda_logo.png" alt="數位發展部 Logo" onerror="this.style.display='none'">
         <span class="brand-text">數位發展部・採購專區</span>
       </a>
       <div class="spacer"></div>
