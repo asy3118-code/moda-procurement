@@ -1,14 +1,14 @@
-<!doctype html>
+<!DOCTYPE html>
+
 <html lang="zh-Hant">
 <head>
 <meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1"/>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&amp;family=Noto+Sans+TC:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
 <title>相關法令及解釋函｜數位發展部 採購資源整合平台</title>
 <script src="https://cdn.tailwindcss.com"></script>
-
 <script>
 tailwind.config = {
   theme: { extend: { colors: { moda: { yellow: '#F4EA5A', gray: '#7B868C', ink: '#0f172a' } } } }
@@ -225,7 +225,6 @@ a.flex > span:first-child { min-width:0; flex:1 1 auto; overflow-wrap:anywhere; 
 }
 
 </style>
-
 <!-- MODA unified theme overrides -->
 <style id="moda-unified-theme-overrides">
   :root{
@@ -638,8 +637,6 @@ a.flex > span:first-child { min-width:0; flex:1 1 auto; overflow-wrap:anywhere; 
     }
   }
 </style>
-
-
 <style id="moda-theme-fix-v2">
 /* ==== Fix v2: restore yellow active nav + consistent yellow hover accent ==== */
 :root{
@@ -731,8 +728,6 @@ a.flex > span:first-child { min-width:0; flex:1 1 auto; overflow-wrap:anywhere; 
   }
 }
 </style>
-
-
 <style id="moda-theme-final-v3">
 /* ==== Final v3: force yellow nav active + remove gray card hover fill ==== */
 :root{
@@ -818,35 +813,30 @@ a.flex > span:first-child { min-width:0; flex:1 1 auto; overflow-wrap:anywhere; 
   }
 }
 </style>
-
 </head>
 <body>
-
 <header class="site-header">
-  <div class="site-header-inner">
-    <a class="site-brand" href="index.html" aria-label="回到首頁">
-          <img class="brand-logo" src="moda_logo.png" alt="數位發展部 MODA 標誌">
-          <span class="brand-text">採購資源整合平台</span>
-        </a>
-
-    <button id="navToggle" class="nav-toggle" type="button" aria-expanded="false" aria-controls="siteNav">
-      <span class="sr-only">開啟選單</span>
-      <svg xmlns="http://www.w3.org/2000/svg" class="nav-icon" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-        <path fill-rule="evenodd" d="M3 5.75A.75.75 0 013.75 5h12.5a.75.75 0 010 1.5H3.75A.75.75 0 013 5.75zm0 4.25c0-.414.336-.75.75-.75h12.5a.75.75 0 010 1.5H3.75A.75.75 0 01 3 10zm0 4.25c0-.414.336-.75.75-.75h12.5a.75.75 0 010 1.5H3.75A.75.75 0 01 3 14.25z" clip-rule="evenodd"/>
-      </svg>
-    </button>
-
-    <nav id="siteNav" class="site-nav" aria-label="主選單">
-      <a class="nav-link" href="docs.html">採購文件範本</a>
-      <a class="nav-link" href="case-generator.html">採購案號產生器</a>
-      <a class="nav-link" href="flowchart.html">採購流程圖</a>
-      <a class="nav-link" href="laws.html">相關法令及解釋函</a>
-      <a class="nav-link" href="qa.html">智慧問答</a>
-      <a class="nav-link" href="pcc.html">工程會解釋函</a>
-    </nav>
-  </div>
+<div class="site-header-inner">
+<a aria-label="回到首頁" class="site-brand" href="index.html">
+<img alt="數位發展部 MODA 標誌" class="brand-logo" src="moda_logo.png"/>
+<span class="brand-text">採購資源整合平台</span>
+</a>
+<button aria-controls="siteNav" aria-expanded="false" class="nav-toggle" id="navToggle" type="button">
+<span class="sr-only">開啟選單</span>
+<svg aria-hidden="true" class="nav-icon" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+<path clip-rule="evenodd" d="M3 5.75A.75.75 0 013.75 5h12.5a.75.75 0 010 1.5H3.75A.75.75 0 013 5.75zm0 4.25c0-.414.336-.75.75-.75h12.5a.75.75 0 010 1.5H3.75A.75.75 0 01 3 10zm0 4.25c0-.414.336-.75.75-.75h12.5a.75.75 0 010 1.5H3.75A.75.75 0 01 3 14.25z" fill-rule="evenodd"></path>
+</svg>
+</button>
+<nav aria-label="主選單" class="site-nav" id="siteNav">
+<a class="nav-link" href="docs.html">採購文件範本</a>
+<a class="nav-link" href="case-generator.html">採購案號產生器</a>
+<a class="nav-link" href="flowchart.html">採購流程圖</a>
+<a class="nav-link" href="laws.html">相關法令及解釋函</a>
+<a class="nav-link" href="qa.html">智慧問答</a>
+<a class="nav-link" href="pcc.html">工程會解釋函</a>
+</nav>
+</div>
 </header>
-
 <div class="page-wrap">
 <div class="text-center mb-8">
 <h3 class="text-2xl font-bold text-slate-900">相關法令及解釋函</h3>
@@ -924,7 +914,7 @@ a.flex > span:first-child { min-width:0; flex:1 1 auto; overflow-wrap:anywhere; 
 <div class="border-t border-slate-200 pt-4 space-y-2">
 <a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://planpe.pcc.gov.tw/prms/explainLetter/readPrmsExplainLetterContentDetail?pkPrmsRuleContent=60043670&amp;_csrf=4ad47d9a-481d-44b3-b6f0-094fec37fcec" rel="noopener noreferrer" target="_blank"><span>採購法第四條規定之「補助金額」，係以個別採購案認定</span><span class="ml-2 text-blue-600 hover:text-blue-800">前往查閱 →</span></a>
 <a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://planpe.pcc.gov.tw/prms/explainLetter/readPrmsExplainLetterContentDetail?pkPrmsRuleContent=60044586&amp;_csrf=4ad47d9a-481d-44b3-b6f0-094fec37fcec" rel="noopener noreferrer" target="_blank"><span>政府採購法及其施行細則所稱[監督]與[監辦]之執行疑義</span><span class="ml-2 text-blue-600 hover:text-blue-800">前往查閱 →</span></a>
-</div>
+<a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://planpe.pcc.gov.tw/prms/explainLetter/readPrmsExplainLetterContentDetail?pkPrmsRuleContent=60044501&amp;_csrf=42ebe5e3-ee29-4be2-8375-67e29e808344" rel="noopener noreferrer" target="_blank"><span>本條所稱「擴充」，係指「原有採購之後續擴充」；所稱零配件供應，係指原有採購之零配件供應</span><span class="ml-2 text-blue-600 hover:text-blue-800">前往查閱 →</span></a><a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://planpe.pcc.gov.tw/prms/explainLetter/readPrmsExplainLetterContentDetail?pkPrmsRuleContent=60044857&amp;_csrf=42ebe5e3-ee29-4be2-8375-67e29e808344" rel="noopener noreferrer" target="_blank"><span>有關政府採購法第二十二條第一項第四款所稱「原供應廠商」之疑義</span><span class="ml-2 text-blue-600 hover:text-blue-800">前往查閱 →</span></a></div>
 </div>
 </div>
 </div>
@@ -938,7 +928,7 @@ a.flex > span:first-child { min-width:0; flex:1 1 auto; overflow-wrap:anywhere; 
 </div>
 <div class="bg-white rounded-xl shadow-md overflow-hidden law-item">
 <button class="accordion-header w-full flex justify-between items-center text-left p-6 focus:outline-none"><span class="text-lg font-semibold text-slate-800">第22條</span><span class="accordion-icon text-2xl text-slate-500 transform transition-transform">▼</span></button>
-<div class="accordion-content"><div class="px-6 pt-2 pb-6"><div class="border-t border-slate-200 pt-4 space-y-2"><a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://lawweb.pcc.gov.tw/LawContent.aspx?id=GL000004" rel="noopener noreferrer" target="_blank"><span>政府採購法第22條第1項第4款所稱「原有採購」之適用範圍</span><span class="ml-2 text-blue-600 hover:text-blue-800">前往查閱 →</span></a></div></div></div>
+<div class="accordion-content"><div class="px-6 pt-2 pb-6"><div class="border-t border-slate-200 pt-4 space-y-2"><a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://lawweb.pcc.gov.tw/LawContent.aspx?id=GL000004" rel="noopener noreferrer" target="_blank"><span>政府採購法第22條第1項第4款所稱「原有採購」之適用範圍</span><span class="ml-2 text-blue-600 hover:text-blue-800">前往查閱 →</span></a><a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://planpe.pcc.gov.tw/prms/explainLetter/readPrmsExplainLetterContentDetail?pkPrmsRuleContent=60043696&amp;_csrf=42ebe5e3-ee29-4be2-8375-67e29e808344" rel="noopener noreferrer" target="_blank"><span>政府採購法第二十二條第一項第四款所稱「原有採購」，依本法第二條關於「採購」之定義，包括工程、財物及勞務</span><span class="ml-2 text-blue-600 hover:text-blue-800">前往查閱 →</span></a><a class="flex items-center justify-between w-full px-4 py-2 border border-slate-200 text-sm font-medium rounded-md text-slate-700 bg-slate-50 hover:bg-slate-100 transition" href="https://planpe.pcc.gov.tw/prms/explainLetter/readPrmsExplainLetterContentDetail?pkPrmsRuleContent=60044210&amp;_csrf=f72171fc-5829-45b7-91d9-848d884c5bef" rel="noopener noreferrer" target="_blank"><span>原有採購之「後續擴充」之案例</span><span class="ml-2 text-blue-600 hover:text-blue-800">前往查閱 →</span></a></div></div></div>
 </div>
 <div class="bg-white rounded-xl shadow-md overflow-hidden law-item">
 <button class="accordion-header w-full flex justify-between items-center text-left p-6 focus:outline-none"><span class="text-lg font-semibold text-slate-800">第23條</span><span class="accordion-icon text-2xl text-slate-500 transform transition-transform">▼</span></button>
@@ -986,8 +976,7 @@ a.flex > span:first-child { min-width:0; flex:1 1 auto; overflow-wrap:anywhere; 
 </div>
 </div>
 </div>
-<button id="backToTop" class="hidden" type="button" aria-label="回到頁首">↑ 回到頁首</button>
-
+<button aria-label="回到頁首" class="hidden" id="backToTop" type="button">↑ 回到頁首</button>
 <script>
 (function(){
   const header = document.querySelector('.site-header');
@@ -1010,8 +999,6 @@ a.flex > span:first-child { min-width:0; flex:1 1 auto; overflow-wrap:anywhere; 
   });
 })();
 </script>
-
-
 <script>
 /* ===== MODA Procurement Site JS (GitHub Pages) ===== */
 (function () {
@@ -1197,6 +1184,5 @@ a.flex > span:first-child { min-width:0; flex:1 1 auto; overflow-wrap:anywhere; 
   });
 })();
 </script>
-
 </body>
 </html>
