@@ -814,7 +814,7 @@ a.flex > span:first-child { min-width:0; flex:1 1 auto; overflow-wrap:anywhere; 
 }
 </style>
 <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-M3JYP1Y2X3"></script>
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-M3JYP1Y2X3"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
@@ -822,7 +822,6 @@ a.flex > span:first-child { min-width:0; flex:1 1 auto; overflow-wrap:anywhere; 
 
   gtag('config', 'G-M3JYP1Y2X3');
 </script>
-
 </head>
 <body>
 <header class="site-header">
@@ -852,15 +851,16 @@ a.flex > span:first-child { min-width:0; flex:1 1 auto; overflow-wrap:anywhere; 
 <h3 class="text-2xl font-bold text-slate-900">相關法令及解釋函</h3>
 <p class="mt-2 text-md text-slate-500">為確保所有採購程序皆符合法規，請務必詳閱以下核心法令。</p>
 </div>
-<div class="mb-8 max-w-2xl mx-auto">
-<div class="relative">
-<div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-<svg class="h-5 w-5 text-slate-400" fill="none" stroke="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-<path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
-</svg>
+<div class="mb-6">
+<div class="flex flex-col sm:flex-row sm:items-center gap-3">
+<div class="flex-1">
+<input class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-white text-slate-700 shadow-sm focus:outline-none focus:ring-2 focus:ring-yellow-300 focus:border-yellow-300" id="lawSearchInput" placeholder="搜尋法令及解釋函（例：第22條、最有利標、查核金額、後續擴充…）" type="text"/>
 </div>
-<input class="block w-full pl-10 pr-3 py-2 border border-slate-300 rounded-full leading-5 bg-white placeholder-slate-500 focus:outline-none focus:placeholder-slate-400 focus:ring-1 focus:ring-blue-500 focus:border-blue-500 sm:text-sm" id="lawSearchInput" placeholder="輸入法規條號或關鍵字進行篩選..." type="text"/>
+<button class="px-4 py-3 rounded-xl border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 transition" id="lawSearchClear" type="button">
+      清除
+    </button>
 </div>
+<div class="mt-3 text-sm text-slate-500">提示：輸入關鍵字後，將自動篩選卡片、展開命中內容並以紅字標示。</div>
 </div>
 <div class="space-y-4" id="lawList">
 <a class="law-item bg-white rounded-xl shadow-md p-6 flex justify-between items-center hover:bg-slate-50 transition" href="https://law.moj.gov.tw/LawClass/LawAll.aspx?pcode=A0030057" rel="noopener noreferrer" target="_blank">
@@ -1192,6 +1192,22 @@ a.flex > span:first-child { min-width:0; flex:1 1 auto; overflow-wrap:anywhere; 
     initLawSearch();
     initBackToTop();
   });
+})();
+</script>
+
+<script>
+(function(){
+  function bindLawSearchClear(){
+    const input = document.getElementById('lawSearchInput');
+    const btn = document.getElementById('lawSearchClear');
+    if (!input || !btn) return;
+    btn.addEventListener('click', () => {
+      input.value = '';
+      input.dispatchEvent(new Event('input', { bubbles: true }));
+      input.focus();
+    });
+  }
+  document.addEventListener('DOMContentLoaded', bindLawSearchClear);
 })();
 </script>
 </body>
